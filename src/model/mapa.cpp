@@ -1,4 +1,6 @@
 #include "mapa.hpp"
+#include <SFML/Graphics.hpp>
+#include <iostream>
 
 namespace model
 {
@@ -15,6 +17,19 @@ Mapa::~Mapa()
 Mapa& Mapa::operator=(Mapa &x) 
 {
     return (*this);
+}
+
+sf::Texture Mapa::getTexture() 
+{
+    sf::Texture texture;
+    if (!texture.loadFromFile("sfml-icon-small.png"))
+    {
+        std::cerr << "Error while loading texture" << std::endl;
+    }
+        texture.setSmooth(true);
+
+
+    return texture;
 }
 
 }

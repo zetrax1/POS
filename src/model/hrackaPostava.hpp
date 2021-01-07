@@ -2,7 +2,7 @@
 #define __HRACKAPOSTAVA_H__
 
 #include <vector>
-
+#include <memory>
 #include "zbran.hpp"
 #include "strelec.hpp"
 
@@ -13,12 +13,15 @@ namespace model
 class Postava
 {
 private:
-    Strelec m_strelec;
+    std::shared_ptr<Strelec> m_strelec;
     std::vector<Zbran> m_zbrane;
 
 public:
-    Postava(/* args */);
+    Postava();
     ~Postava();
+
+    std::shared_ptr<Strelec> getStrelec();
+    
 };
 
 
