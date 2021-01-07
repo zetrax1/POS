@@ -1,6 +1,8 @@
 #ifndef MAPA_H
 #define MAPA_H
 
+#include <SFML/Graphics.hpp>
+
 namespace model
 {
 
@@ -13,6 +15,7 @@ public:
     ~Mapa();
 
     Mapa &operator=(Mapa &x);
+    sf::Texture getTexture();
 };
 
 }
