@@ -11,7 +11,7 @@
 #include <iostream>
 #include <math.h>
 #include "model/mapa.hpp"
-#include "model/hrackaPostava.hpp"
+#include "model/postava.hpp"
 #include "controller/hra.hpp"
 #include "view/monitor_view.hpp"
 

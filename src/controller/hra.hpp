@@ -2,7 +2,7 @@
 #define HRA_H
 
 #include "../model/mapa.hpp"
-#include "../model/hrackaPostava.hpp"
+#include "../model/postava.hpp"
 #include "../view/monitor_view.hpp"
 
 #include <vector>
