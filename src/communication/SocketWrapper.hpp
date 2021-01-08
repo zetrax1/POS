@@ -18,25 +18,24 @@ namespace communication
     {
         
     public:
-        SocketWrapper(size_t bufferSize);
+        SocketWrapper(size_t bufferSize, void(&aErrorCallback)(std::string), void(&aDebugCallback)(std::string));
         ~SocketWrapper();
-        void initCallbacks(void(*aErrorCallback)(std::string), void(*aMessageCallback)(std::string), void(*aDebugCallback)(std::string));
         int initServer(int port);
         int initClient(std::string serverAddress, int port);
         int serverListen();
         int clientConnect();
         int serverAccept();
-        int sendMessage(int clientSocketFd, std::string);
+        int sendMessage(int clientSocketFd, const std::string&);
         std::string receiveMessage(int clientSocketFd);
         int serverGetClientSocketFd(int count);
-        int clientGetServerSocketFd();
+        int getSocketFd();
+        int getClientsCount();
         
         
     private:
         
-        void (*errorCallback)(std::string);
-        void (*messageCallback)(std::string);
-        void (*debugCallback)(std::string);
+        void (&errorCallback)(std::string);
+        void (&debugCallback)(std::string);
 
         int sokcetFd;
         std::vector<int> clientsSocketFd;

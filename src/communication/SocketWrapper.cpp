@@ -3,10 +3,13 @@
 namespace communication
 {
 
-    SocketWrapper::SocketWrapper(size_t bufferSize)
+    SocketWrapper::SocketWrapper(size_t bufferSize, void(&aErrorCallback)(std::string), void(&aDebugCallback)(std::string)):
+        errorCallback (aErrorCallback),
+        debugCallback (aDebugCallback),
+        messageBuffer (new char[bufferSize]),
+        messageBufferSize (bufferSize),
     {
-        messageBuffer = new char[bufferSize];
-        messageBufferSize = bufferSize;
+        
     }
 
     SocketWrapper::~SocketWrapper()
@@ -15,20 +18,12 @@ namespace communication
     }
 
 
-    void SocketWrapper::initCallbacks(void(*aErrorCallback)(std::string), void(*aMessageCallback)(std::string), void(*aDebugCallback)(std::string))
-    {
-        errorCallback = aErrorCallback;
-        messageCallback = aMessageCallback;
-        debugCallback = aDebugCallback;
-        if (debugCallback) debugCallback("calbacks init");
-    }
-
     int SocketWrapper::initServer(int port)
     {
         // Creating socket file descriptor 
         int ret = sokcetFd = socket(AF_INET, SOCK_STREAM, 0);
         
-        if (ret == 0)
+        if (ret < 1)
         {
             if (errorCallback) errorCallback("socket failed");
             return 1;
@@ -121,9 +116,9 @@ namespace communication
 
     int SocketWrapper::serverAccept()
     {
-        size_t addrlen = sizeof(address);
+        socklen_t addrlen = sizeof(address);
         
-        int newKlient = accept(sokcetFd, (struct sockaddr *)&address, (socklen_t*)&addrlen);    
+        int newKlient = accept(sokcetFd, (struct sockaddr *)&address, &addrlen);    
         
         if(newKlient < 0)
         {
@@ -137,7 +132,7 @@ namespace communication
         return 0;
     }
 
-    int SocketWrapper::sendMessage(int clientSocketFd, std::string message)
+    int SocketWrapper::sendMessage(int clientSocketFd, const std::string& message)
     {
         if (debugCallback) debugCallback("sent");
         return send(clientSocketFd, message.c_str(), message.size(), 0);
@@ -146,10 +141,7 @@ namespace communication
     std::string SocketWrapper::receiveMessage(int clientSocketFd)
     {    
         int len = read(clientSocketFd, messageBuffer, messageBufferSize);
-        
-        
-        if (messageCallback) messageCallback(std::string(messageBuffer, len));
-        if (debugCallback) debugCallback("received");
+        if (len > 0 && debugCallback) debugCallback("received");
         return std::string(messageBuffer, len);
     }
 
@@ -158,9 +150,14 @@ namespace communication
         return this->clientsSocketFd[number];
     }
 
-    int SocketWrapper::clientGetServerSocketFd()
+    int SocketWrapper::getSocketFd()
     {
         return sokcetFd;
+    }
+    
+    int SocketWrapper::getClientsCount() 
+    {
+        return this->clientsSocketFd.size();
     }
 }
 

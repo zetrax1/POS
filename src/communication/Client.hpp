@@ -1,34 +1,39 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
+#include <thread>
 #include <string>
 #include <iostream>
 #include <stdio.h>
-
 #include "SocketWrapper.hpp"
 
-class Client : client{messageBufferSize}
+namespace communication
 {
-    
-public:
-    Client();
-    Client(std::string serverIp, int port, size_t messageBufferSize);
-    void errcallback(std::string msg);
-    void dbgcallback(std::string msg);
-    void msgcallback(std::string msg);
-    
-    void connectToServer();
-    void sendMsg(std::string);
-    
-private:
-    SocketWrapper client;
-    std::string serverIp;
-    int port;
-    size_t messageBufferSize;
-    int socketFd;
-    
 
-};
+    class Client
+    {
 
+    public:
+        Client();
+        Client(std::string serverIp, int port, size_t messageBufferSize);
+        void connectToServer();
+        void sendMsg(std::string);        
+        void readMessages();
+
+
+    private:
+        SocketWrapper clientSocketWrapp;
+        std::string serverIp;
+        int port;
+        size_t messageBufferSize;
+
+        void readMessagesInLoop();
+        bool isConectionActive();
+
+        static void errcallback(std::string msg);
+        static void dbgcallback(std::string msg);
+        
+    };
+
+} // namespace communication
 #endif /* CLIENT_HPP */
-
