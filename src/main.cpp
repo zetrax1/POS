@@ -28,16 +28,7 @@ int main()
     model::Postava postava;
     postava.setPozicia(50 ,100 );
     hra.addNewPostava(postava);
-
     hra.init_hra();
-
-
-    
-    // ____________________
-    // ::: Load texture :::
-    model::Mapa map;
-
- //   hra.init_hra();
 
     return 0;
 }

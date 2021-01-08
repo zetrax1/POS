@@ -1,4 +1,4 @@
-#include "hrackaPostava.hpp"
+#include "postava.hpp"
 #include "strelec.hpp"
 #include <memory>
 
@@ -7,12 +7,10 @@ namespace model
 
 
 Postava::Postava() :  m_strelec(std::make_shared<Strelec>()),
-    pozicia(0,0)
-{
-   
+    m_pozicia(0,0)
+{    
     setSprite();
-
-    sprite.setPosition(0,0);
+    m_sprite.setPosition(0,0);
 }
 
 Postava::~Postava()
@@ -24,10 +22,6 @@ std::shared_ptr<Strelec> Postava::getStrelec()
     return m_strelec;
 }
 
-Strelec Postava::getStrelec2() 
-{
-    return m_strelec2;
-}
 
 void Postava::pohyb_na_mape()
 {
@@ -36,27 +30,27 @@ void Postava::pohyb_na_mape()
 
 std::pair<int,int> Postava::getPozicia()  
 {
-    return pozicia;
+    return m_pozicia;
 }
 
 void Postava::setPozicia(int x,int y) 
 {
-    pozicia.first = x;
-    pozicia.second = y;
-    sprite.setPosition(x,y);
+    m_pozicia.first = x;
+    m_pozicia.second = y;
+    m_sprite.setPosition(x,y);
 }
 
 void Postava::setSprite() 
 {
-
-    sprite.setTexture(m_strelec2.getView().getTexture());
-    sf::FloatRect spriteSize=sprite.getGlobalBounds();
-    sprite.setOrigin(spriteSize.width/2.,spriteSize.height/2.);
+    m_strelec->getView().readTextura(m_texture);
+    m_sprite.setTexture(m_texture);
+    sf::FloatRect spriteSize=m_sprite.getGlobalBounds();
+    m_sprite.setOrigin(spriteSize.width/2.,spriteSize.height/2.);
 }
 
 sf::Sprite Postava::getSprite() 
 {
-    return sprite;
+    return m_sprite;
 }
 
 }

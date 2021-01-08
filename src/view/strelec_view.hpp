@@ -10,16 +10,19 @@ namespace view
 class Strelec_view
 {
 private:
-    sf::Texture textura;
+    sf::Texture m_textura;
 
 public:
     Strelec_view(/* args */);
     ~Strelec_view();
 
 
-    void setTexture();
 
     sf::Texture& getTexture();
+
+    void setTexture();
+
+    void readTextura(sf::Texture &texture);
 
 };
 

@@ -1,5 +1,5 @@
-#ifndef __HRACKAPOSTAVA_H__
-#define __HRACKAPOSTAVA_H__
+#ifndef __POSTAVA_H__
+#define __POSTAVA_H__
 
 #include <vector>
 #include <memory>
@@ -14,18 +14,16 @@ class Postava
 {
 private:
     std::shared_ptr<Strelec> m_strelec;
-    Strelec m_strelec2;
     std::vector<Zbran> m_zbrane;
-    std::pair<int,int> pozicia;
-    sf::Sprite sprite;
+    std::pair<int,int> m_pozicia;
+    sf::Sprite m_sprite;
+    sf::Texture m_texture;
 
 public:
     Postava();
     ~Postava();
 
     std::shared_ptr<Strelec> getStrelec();
-    Strelec getStrelec2();
-
 
     void pohyb_na_mape();
     std::pair<int,int> getPozicia();
@@ -33,7 +31,6 @@ public:
 
     void setSprite();
     sf::Sprite getSprite();
-    
     
 };
 

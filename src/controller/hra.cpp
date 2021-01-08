@@ -126,19 +126,11 @@ namespace controler
   void Hra::init_hra()
   {
     sf::RenderWindow &window = m_monitorView->get();
-
     sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
 
-    // // Create texture from PNG file
-    sf::Texture texture = getPostava(0).getStrelec2().getView().getTexture();
-
-    // Create the sprite and apply the texture
-    sf::Sprite sprite;
-    sprite.setTexture(sf::Texture(getPostava(0).getStrelec2().getView().getTexture()));
-    sf::FloatRect spriteSize = sprite.getGlobalBounds();
-    sprite.setOrigin(spriteSize.width / 2., spriteSize.height / 2.);
-
-     getPostava(0).setSprite() ;
+    sf::Sprite m_sprite;
+    sf::FloatRect spriteSize=m_sprite.getGlobalBounds();
+    m_sprite.setOrigin(spriteSize.width/2.,spriteSize.height/2.);
 
     while (window.isOpen())
     {
@@ -146,9 +138,9 @@ namespace controler
 
       // Clear the window and apply grey background
       window.clear(sf::Color(127, 127, 127));
-      sprite.setPosition(getPostava(0).getPozicia().first, getPostava(0).getPozicia().second);
-    // window.draw(getPostava(0).getSprite());
-     window.draw(sprite);
+      //sprite.setPosition(getPostava(0).getPozicia().first, getPostava(0).getPozicia().second);
+     window.draw(getPostava(0).getSprite());
+    // window.draw(m_sprite);
 
       // Update display and wait for vsync
       window.display();
