@@ -19,7 +19,7 @@ public:
 
     void setTexture();
 
-    sf::Texture getTexture();
+    sf::Texture& getTexture();
 
 };
 

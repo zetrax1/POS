@@ -14,13 +14,26 @@ class Postava
 {
 private:
     std::shared_ptr<Strelec> m_strelec;
+    Strelec m_strelec2;
     std::vector<Zbran> m_zbrane;
+    std::pair<int,int> pozicia;
+    sf::Sprite sprite;
 
 public:
     Postava();
     ~Postava();
 
     std::shared_ptr<Strelec> getStrelec();
+    Strelec getStrelec2();
+
+
+    void pohyb_na_mape();
+    std::pair<int,int> getPozicia();
+    void setPozicia(int x ,int y);
+
+    void setSprite();
+    sf::Sprite getSprite();
+    
     
 };
 

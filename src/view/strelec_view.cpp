@@ -9,7 +9,7 @@ namespace view
 
 
 
-Strelec_view::Strelec_view(/* args */)
+Strelec_view::Strelec_view()
 {
     if (!textura.loadFromFile("sfml-icon-small.png"))
     {
@@ -25,7 +25,7 @@ Strelec_view::~Strelec_view()
 
 }
 
-sf::Texture Strelec_view::getTexture() 
+sf::Texture& Strelec_view::getTexture() 
 {
     return textura;
 }
