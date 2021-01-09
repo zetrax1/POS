@@ -132,22 +132,20 @@ namespace communication
         return 0;
     }
 
-    int SocketWrapper<T>::sendMessage(int clientSocketFd, const T& message)
+    int SocketWrapper::sendMessage(int clientSocketFd, const std::string& message)
     {
         if (debugCallback) debugCallback("sent");
-        return send(clientSocketFd, &message, sizeof(message), 0);
+        return send(clientSocketFd, message.c_str(), message.size(), 0);
     }
 
-    T SocketWrapper<T>::receiveMessage(int clientSocketFd)
+    std::string SocketWrapper::receiveMessage(int clientSocketFd)
     {    
         int len = read(clientSocketFd, messageBuffer, messageBufferSize);
         if(len > 0)
         {
             if (debugCallback) debugCallback("received");
-            T* t = (T*)messageBuffer;
-            return *t;
         }
-       return nullptr;
+        return std::string(messageBuffer, len);
     }
 
     int SocketWrapper::serverGetClientSocketFd(int number)

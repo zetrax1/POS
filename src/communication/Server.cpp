@@ -48,10 +48,12 @@ namespace communication
             {
                 if(serverSocketWrapp.serverGetClientSocketFd(i) > 0)
                 {
-                    T incommingMsg = serverSocketWrapp.receiveMessage(serverSocketWrapp.serverGetClientSocketFd(i));
-                    if (incommingMsg != nullptr)
+                    std::string incommingMsg = serverSocketWrapp.receiveMessage(serverSocketWrapp.serverGetClientSocketFd(i));
+                    //if (incommingMsg != nullptr)
+                    if (incommingMsg.size() > 0)
                     {
                         //readQ
+                        std::cout << "msg server> " << incommingMsg << std::endl;
                     }
                 }
             }

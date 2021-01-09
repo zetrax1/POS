@@ -55,7 +55,26 @@ namespace communication
         }
     }
     
+void Client::readMessagesInLoop() 
+    {
+        while(isConectionActive())
+        {
+            std::string incommingMsg = clientSocketWrapp.receiveMessage(clientSocketWrapp.getSocketFd());
+            if (incommingMsg.size() > 0)
+            {
+                //readQueue.push(incommingMsg);
+                std::cout << "msg client> " << incommingMsg << std::endl;
+            }
+        }
+    }
 
+    void Client::sendMsg(std::string msg) 
+    {
+        if(isConectionActive())
+        {
+            clientSocketWrapp.sendMessage(clientSocketWrapp.getSocketFd(), msg);
+        }
+    }
 
     
     void Client::readMessagesInThread() 

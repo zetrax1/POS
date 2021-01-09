@@ -10,7 +10,7 @@
 
 namespace communication
 {
-    template <typename T> 
+
     class Client
     {
 
@@ -18,16 +18,16 @@ namespace communication
         Client();
         Client(std::string serverIp, int port, size_t messageBufferSize);
         void connectToServer();
-        void sendMsg(T);        
+        void sendMsg(std::string);        
         void readMessagesInThread();
 
 
     private:
-        SocketWrapper<T> clientSocketWrapp;
+        SocketWrapper clientSocketWrapp;
         std::string serverIp;
         int port;
         size_t messageBufferSize;
-        Queue<T> readQueue;
+        //Queue<T> readQueue;
 
 
         void readMessagesInLoop();
@@ -36,29 +36,6 @@ namespace communication
         static void errcallback(std::string msg);
         static void dbgcallback(std::string msg);
         
-    
-
-
-    void Client<T>::readMessagesInLoop() 
-    {
-        while(isConectionActive())
-        {
-            T incommingMsg = clientSocketWrapp.receiveMessage(clientSocketWrapp.getSocketFd());
-            if (incommingMsg != nullptr)
-            {
-                readQueue.push(incommingMsg);
-            }
-        }
-    }
-
-    void Client<T>::sendMsg(T msg) 
-    {
-        if(isConectionActive())
-        {
-            clientSocketWrapp.sendMessage(clientSocketWrapp.getSocketFd(), msg);
-        }
-    }
-
     };
 
 } // namespace communication

@@ -11,23 +11,22 @@
 
 namespace communication
 {
-    template <typename T> 
     class Server
     {
     public:
         Server();
         Server(int port, size_t messageBufferSize);
         void createServer();
-        void sendMsg(int clientIndex, const T&);
-        void sendMsg(const T&);
+        void sendMsg(int clientIndex, const std::string&);
+        void sendMsg(const std::string&);
         
         
 
     private:
-        SocketWrapper<T> serverSocketWrapp;
+        SocketWrapper serverSocketWrapp;
         int port;
         size_t messageBufferSize;
-        Queue<std::pair<int, T> > readQueue;
+        //Queue<std::pair<int, T> > readQueue;
 
         bool serverRunning();
         void listenAcceptClientInLoop();
