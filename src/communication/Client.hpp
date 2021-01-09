@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "SocketWrapper.hpp"
 #include "Queue.hpp"
+#include "Data.hpp"
 
 namespace communication
 {
@@ -18,7 +19,7 @@ namespace communication
         Client();
         Client(std::string serverIp, int port, size_t messageBufferSize);
         void connectToServer();
-        void sendMsg(std::string);        
+        void sendMsg(const Data&);        
         void readMessagesInThread();
 
 
@@ -27,7 +28,7 @@ namespace communication
         std::string serverIp;
         int port;
         size_t messageBufferSize;
-        //Queue<T> readQueue;
+        Queue<Data> readQueue;
 
 
         void readMessagesInLoop();

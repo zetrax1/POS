@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Data.hpp"
 
 namespace communication
 {
@@ -25,17 +26,19 @@ namespace communication
         int serverListen();
         int clientConnect();
         int serverAccept();
-        int sendMessage(int clientSocketFd, const std::string&);
-        std::string receiveMessage(int clientSocketFd);
+        int sendMessage(int clientSocketFd, const Data&);
+        Data receiveMessage(int clientSocketFd);
         int serverGetClientSocketFd(int count);
         int getSocketFd();
         int getClientsCount();
+        void closeFd(int fd);
         
         
     private:
         
         void (&errorCallback)(std::string);
         void (&debugCallback)(std::string);
+        
 
         int sokcetFd;
         std::vector<int> clientsSocketFd;

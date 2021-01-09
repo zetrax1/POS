@@ -4,6 +4,7 @@
 #include "SocketWrapper.hpp"
 #include <thread>
 #include "Queue.hpp"
+#include "Data.hpp"
 
 #define DEFAULT_PORT 8080
 #define DEFAULT_MESSAGE_BUFFER_SIZE 1024
@@ -17,8 +18,8 @@ namespace communication
         Server();
         Server(int port, size_t messageBufferSize);
         void createServer();
-        void sendMsg(int clientIndex, const std::string&);
-        void sendMsg(const std::string&);
+        void sendMsg(int clientIndex, const Data&);
+        void sendMsg(const Data&);
         
         
 
@@ -26,7 +27,7 @@ namespace communication
         SocketWrapper serverSocketWrapp;
         int port;
         size_t messageBufferSize;
-        //Queue<std::pair<int, T> > readQueue;
+        Queue<Data> readQueue;
 
         bool serverRunning();
         void listenAcceptClientInLoop();

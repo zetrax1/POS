@@ -21,7 +21,7 @@ namespace communication
         readMessagesInThread();
     }
 
-    void Server::sendMsg(int clientIndex, const std::string& msg)
+    void Server::sendMsg(int clientIndex, const Data& msg)
     {
         if (serverRunning())
         {
@@ -29,7 +29,7 @@ namespace communication
         }
     }
     
-    void Server::sendMsg(const std::string& msg) 
+    void Server::sendMsg(const Data& msg) 
     {
         if (serverRunning())
         {
@@ -44,16 +44,15 @@ namespace communication
     {
         while(serverRunning())
         {
-            for(int i = 0; i != serverSocketWrapp.getClientsCount(); i++) 
+            for(int i = 0; i < serverSocketWrapp.getClientsCount(); i++) 
             {
                 if(serverSocketWrapp.serverGetClientSocketFd(i) > 0)
                 {
-                    std::string incommingMsg = serverSocketWrapp.receiveMessage(serverSocketWrapp.serverGetClientSocketFd(i));
-                    //if (incommingMsg != nullptr)
-                    if (incommingMsg.size() > 0)
+                    Data incommingMsg = serverSocketWrapp.receiveMessage(serverSocketWrapp.serverGetClientSocketFd(i));
+                    if (sizeof(incommingMsg) != 0)
                     {
-                        //readQ
-                        std::cout << "msg server> " << incommingMsg << std::endl;
+                        readQueue.push(incommingMsg);
+                        std::cout << "msg server> " << sizeof(incommingMsg) << std::endl;
                     }
                 }
             }

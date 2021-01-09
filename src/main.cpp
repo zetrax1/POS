@@ -2,7 +2,7 @@
 #include <functional>
 #include "communication/Client.hpp"
 #include "communication/Server.hpp"
-//#include "communication/Data.hpp"
+#include "communication/Data.hpp"
 
 /*
 bool testLambda(const std::function<bool[& test](int)>& hocico) 
@@ -50,7 +50,7 @@ int main()
     {
         communication::Client client;
         client.connectToServer();
-        client.sendMsg("nazdar");
+        client.sendMsg(Data());
         while(true)
         {}
     }

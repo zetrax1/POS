@@ -15,6 +15,15 @@ namespace communication
     SocketWrapper::~SocketWrapper()
     {
         delete [] messageBuffer;
+        close(sokcetFd);
+        if(clientsSocketFd.size() > 0)
+        {
+            for (size_t i = 0; i < clientsSocketFd.size(); i++)
+            {
+                close(i);
+            }
+            
+        }
     }
 
 
@@ -132,20 +141,25 @@ namespace communication
         return 0;
     }
 
-    int SocketWrapper::sendMessage(int clientSocketFd, const std::string& message)
+    int SocketWrapper::sendMessage(int clientSocketFd, const Data& message)
     {
         if (debugCallback) debugCallback("sent");
-        return send(clientSocketFd, message.c_str(), message.size(), 0);
+        return send(clientSocketFd, &message, sizeof(message), 0);
     }
 
-    std::string SocketWrapper::receiveMessage(int clientSocketFd)
+    Data SocketWrapper::receiveMessage(int clientSocketFd)
     {    
         int len = read(clientSocketFd, messageBuffer, messageBufferSize);
         if(len > 0)
         {
             if (debugCallback) debugCallback("received");
+
+            //return std::string(messageBuffer, len);
+            Data* data = (Data*)messageBuffer;
+            return *data;
         }
-        return std::string(messageBuffer, len);
+
+        return {};
     }
 
     int SocketWrapper::serverGetClientSocketFd(int number)
@@ -161,6 +175,11 @@ namespace communication
     int SocketWrapper::getClientsCount() 
     {
         return this->clientsSocketFd.size();
+    }
+    
+    void SocketWrapper::closeFd(int fd) 
+    {
+        close(fd);
     }
 }
 

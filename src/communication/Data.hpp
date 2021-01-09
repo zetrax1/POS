@@ -4,7 +4,8 @@
 class Data
 {
 private:
-    /* data */
+    int a;
+    char b;
 public:
     Data(/* args */);
     ~Data();

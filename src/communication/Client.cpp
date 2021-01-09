@@ -59,16 +59,16 @@ void Client::readMessagesInLoop()
     {
         while(isConectionActive())
         {
-            std::string incommingMsg = clientSocketWrapp.receiveMessage(clientSocketWrapp.getSocketFd());
-            if (incommingMsg.size() > 0)
+            Data incommingMsg = clientSocketWrapp.receiveMessage(clientSocketWrapp.getSocketFd());
+            if (sizeof(incommingMsg) > 0)
             {
-                //readQueue.push(incommingMsg);
-                std::cout << "msg client> " << incommingMsg << std::endl;
+                readQueue.push(incommingMsg);
+                std::cout << "msg client> " << sizeof(incommingMsg) <<std::endl;
             }
         }
     }
 
-    void Client::sendMsg(std::string msg) 
+    void Client::sendMsg(const Data& msg) 
     {
         if(isConectionActive())
         {

@@ -31,6 +31,7 @@ class Queue
     cond_.notify_one();
   }
 
+  Queue() = default;
   Queue(const Queue&) = delete;            
   Queue& operator=(const Queue&) = delete; 
   
