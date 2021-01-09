@@ -2,6 +2,7 @@
 #include <functional>
 #include "communication/Client.hpp"
 #include "communication/Server.hpp"
+#include "communication/Data.hpp"
 
 /*
 bool testLambda(const std::function<bool[& test](int)>& hocico) 
@@ -32,26 +33,27 @@ int main()
 
     std::cout << value1 << std::endl << value2 << std::endl;
     */
-    /*
+    
     char choice;
     std::cout<<"stlac s pre server a c pre klienta"<<std::endl;
     std::cin>>choice; 
     if(choice == 's')
     {
-        communication::Server ser;
-        ser.createServer();
+        communication::Server<Data> server;
+        server.createServer();
+        //server.sendMsg("maj sa");
         while(true)
-        {
-            //if(false) break;
-        }
+        {}
         
     }
     else
     {
-        communication::Client client;
+        communication::Client<Data> client;
         client.connectToServer();
-        client.sendMsg("nazdar");
-    }*/
+        //client.sendMsg("nazdar");
+        while(true)
+        {}
+    }
     
     return 0;
 }

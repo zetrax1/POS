@@ -8,21 +8,19 @@ namespace communication
 {
 
     Client::Client() : 
-        clientSocketWrapp(DEFAULT_MESSAGE_BUFFER_SIZE), 
-        aErrorCallback(errcallback), 
-        aErrorCallback(msgcallback), 
-        dbgcallback
+        clientSocketWrapp(DEFAULT_MESSAGE_BUFFER_SIZE, errcallback, dbgcallback)
     {
         serverIp = DEFAULT_IP;
         port = DEFAULT_PORT;
         messageBufferSize = DEFAULT_MESSAGE_BUFFER_SIZE;
     }
 
-    Client::Client(std::string serverIp, int port, size_t messageBufferSize) : clientSocketWrapp(messageBufferSize)
+    Client::Client(std::string serverIp, int port, size_t messageBufferSize) : clientSocketWrapp(messageBufferSize, errcallback, dbgcallback)
     {
         serverIp = serverIp;
         port = port;
         messageBufferSize = messageBufferSize;
+
     }
 
     void Client::dbgcallback(std::string msg)
@@ -36,52 +34,31 @@ namespace communication
         exit(EXIT_FAILURE);
     }
 
-    void Client::msgcallback(std::string msg)
-    {
-        if (msg.size() > 0)  std::cout << "msg client> " << msg << std::endl;
-    }
-
     void Client::connectToServer()
     {
-        clientSocketWrapp.initCallbacks(errcallback, msgcallback, dbgcallback);
         clientSocketWrapp.initClient(serverIp, port);
         clientSocketWrapp.clientConnect();
+        readMessagesInThread();
     }
 
     
 
     bool Client::isConectionActive()
     {
-        if (clientSocketWrapp.getSocketFd() < 1)
-        {
-            return false;
-        }
-        else
+        if (clientSocketWrapp.getSocketFd() > 1)
         {
             return true;
         }
-        
-    }
-    
-    void Client::readMessagesInLoop() 
-    {
-        while(isConectionActive())
+        else
         {
-            std::string incomingMsg = clientSocketWrapp.receiveMessage(clientSocketWrapp.getSocketFd());
-            //todo: call callback function
+            return false;
         }
     }
+    
 
-    void Client::sendMsg(std::string msg) 
-    {
-        if(isConectionActive())
-        {
-            clientSocketWrapp.sendMessage(clientSocketWrapp.getSocketFd(), msg);
-        }
-    }
 
     
-    void Client::readMessages() 
+    void Client::readMessagesInThread() 
     {
         std::thread(&Client::readMessagesInLoop, this).detach();
     }

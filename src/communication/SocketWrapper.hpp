@@ -14,6 +14,7 @@
 
 namespace communication
 {
+    template <typename T> 
     class SocketWrapper 
     {
         
@@ -25,8 +26,8 @@ namespace communication
         int serverListen();
         int clientConnect();
         int serverAccept();
-        int sendMessage(int clientSocketFd, const std::string&);
-        std::string receiveMessage(int clientSocketFd);
+        int sendMessage(int clientSocketFd, const T&);
+        T receiveMessage(int clientSocketFd);
         int serverGetClientSocketFd(int count);
         int getSocketFd();
         int getClientsCount();

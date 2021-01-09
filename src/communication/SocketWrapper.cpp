@@ -7,9 +7,9 @@ namespace communication
         errorCallback (aErrorCallback),
         debugCallback (aDebugCallback),
         messageBuffer (new char[bufferSize]),
-        messageBufferSize (bufferSize),
+        messageBufferSize (bufferSize)
     {
-        
+        //todo: init client init server
     }
 
     SocketWrapper::~SocketWrapper()
@@ -132,17 +132,22 @@ namespace communication
         return 0;
     }
 
-    int SocketWrapper::sendMessage(int clientSocketFd, const std::string& message)
+    int SocketWrapper<T>::sendMessage(int clientSocketFd, const T& message)
     {
         if (debugCallback) debugCallback("sent");
-        return send(clientSocketFd, message.c_str(), message.size(), 0);
+        return send(clientSocketFd, &message, sizeof(message), 0);
     }
 
-    std::string SocketWrapper::receiveMessage(int clientSocketFd)
+    T SocketWrapper<T>::receiveMessage(int clientSocketFd)
     {    
         int len = read(clientSocketFd, messageBuffer, messageBufferSize);
-        if (len > 0 && debugCallback) debugCallback("received");
-        return std::string(messageBuffer, len);
+        if(len > 0)
+        {
+            if (debugCallback) debugCallback("received");
+            T* t = (T*)messageBuffer;
+            return *t;
+        }
+       return nullptr;
     }
 
     int SocketWrapper::serverGetClientSocketFd(int number)
