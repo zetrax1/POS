@@ -1,5 +1,5 @@
 
-#include "strelec_view.hpp"
+#include "StrelecView.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 

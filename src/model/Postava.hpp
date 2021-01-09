@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <memory>
-#include "zbran.hpp"
-#include "strelec.hpp"
+#include "Zbran.hpp"
+#include "Strelec.hpp"
 
 namespace model
 {

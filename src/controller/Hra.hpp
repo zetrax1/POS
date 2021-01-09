@@ -1,9 +1,9 @@
 #ifndef HRA_H
 #define HRA_H
 
-#include "../model/mapa.hpp"
-#include "../model/postava.hpp"
-#include "../view/monitor_view.hpp"
+#include "../model/Mapa.hpp"
+#include "../model/Postava.hpp"
+#include "../view/MonitorView.hpp"
 
 #include <vector>
 
@@ -34,7 +34,6 @@ namespace controler
         void init_hra();
 
         void setMapa(model::Mapa map);
-        model::Mapa getMapa();
 
         void addNewPostava(const model::Postava &postava);
 

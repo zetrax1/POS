@@ -10,10 +10,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
-#include "model/mapa.hpp"
-#include "model/postava.hpp"
-#include "controller/hra.hpp"
-#include "view/monitor_view.hpp"
+#include "model/Mapa.hpp"
+#include "model/Postava.hpp"
+#include "controller/Hra.hpp"
+#include "view/MonitorView.hpp"
 
 
 

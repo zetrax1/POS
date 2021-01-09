@@ -1,7 +1,8 @@
-#include "hra.hpp"
+#include "Hra.hpp"
+#include <iostream>
+
 namespace controler
 {
-
   Hra::Hra(/* args */) : m_monitorView(new view::Monitor_view)
   {
   }
@@ -16,10 +17,6 @@ namespace controler
     m_mapa = map;
   }
 
-  model::Mapa Hra::getMapa()
-  {
-    return m_mapa;
-  }
 
   void Hra::addNewPostava(const model::Postava &postava)
   {
@@ -125,22 +122,17 @@ namespace controler
 
   void Hra::init_hra()
   {
-    sf::RenderWindow &window = m_monitorView->get();
-    sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
 
-    sf::Sprite m_sprite;
-    sf::FloatRect spriteSize=m_sprite.getGlobalBounds();
-    m_sprite.setOrigin(spriteSize.width/2.,spriteSize.height/2.);
+
+    sf::RenderWindow &window = m_monitorView->get();
+
 
     while (window.isOpen())
     {
       ovladanie_hry();
 
-      // Clear the window and apply grey background
       window.clear(sf::Color(127, 127, 127));
-      //sprite.setPosition(getPostava(0).getPozicia().first, getPostava(0).getPozicia().second);
-     window.draw(getPostava(0).getSprite());
-    // window.draw(m_sprite);
+      window.draw(getPostava(0).getSprite());
 
       // Update display and wait for vsync
       window.display();

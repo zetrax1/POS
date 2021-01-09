@@ -1,5 +1,5 @@
-#include "postava.hpp"
-#include "strelec.hpp"
+#include "Postava.hpp"
+#include "Strelec.hpp"
 #include <memory>
 
 namespace model

@@ -1,4 +1,4 @@
-#include "monitor_view.hpp"
+#include "MonitorView.hpp"
 
 namespace view
 {
