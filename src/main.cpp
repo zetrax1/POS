@@ -13,6 +13,8 @@ bool testLambda(const std::function<bool[& test](int)>& hocico)
     return returnValue;
 }
 */
+
+
 int main()
 {
     /*
@@ -33,7 +35,9 @@ int main()
 
     std::cout << value1 << std::endl << value2 << std::endl;
     */
-    
+
+
+
     char choice;
     std::cout<<"stlac s pre server a c pre klienta"<<std::endl;
     std::cin>>choice; 
@@ -51,8 +55,6 @@ int main()
         communication::Client client;
         client.connectToServer();
         client.sendMsg(Data());
-        while(true)
-        {}
     }
     
     return 0;

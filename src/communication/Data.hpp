@@ -7,7 +7,8 @@ private:
     int a;
     char b;
 public:
-    Data(/* args */);
+    Data();
+    Data(const Data&);
     ~Data();
 };
 

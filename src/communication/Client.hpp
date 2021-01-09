@@ -8,6 +8,8 @@
 #include "SocketWrapper.hpp"
 #include "Queue.hpp"
 #include "Data.hpp"
+#include <vector>
+#include <mutex>
 
 namespace communication
 {
@@ -20,19 +22,23 @@ namespace communication
         Client(std::string serverIp, int port, size_t messageBufferSize);
         void connectToServer();
         void sendMsg(const Data&);        
-        void readMessagesInThread();
+        Data getFromReadQueue();
 
 
     private:
-        SocketWrapper clientSocketWrapp;
+        
         std::string serverIp;
         int port;
         size_t messageBufferSize;
         Queue<Data> readQueue;
+        std::vector<char> messageBuffer;
+        SocketWrapper clientSocketWrapp;
+        std::mutex mutex_;
 
 
         void readMessagesInLoop();
         bool isConectionActive();
+        void readMessagesInThread();
 
         static void errcallback(std::string msg);
         static void dbgcallback(std::string msg);

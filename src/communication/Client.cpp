@@ -8,20 +8,24 @@ namespace communication
 {
 
     Client::Client() : 
-        clientSocketWrapp(DEFAULT_MESSAGE_BUFFER_SIZE, errcallback, dbgcallback)
+        messageBuffer(DEFAULT_MESSAGE_BUFFER_SIZE),
+        clientSocketWrapp(messageBuffer, errcallback, dbgcallback)
     {
         serverIp = DEFAULT_IP;
         port = DEFAULT_PORT;
         messageBufferSize = DEFAULT_MESSAGE_BUFFER_SIZE;
     }
 
-    Client::Client(std::string serverIp, int port, size_t messageBufferSize) : clientSocketWrapp(messageBufferSize, errcallback, dbgcallback)
+    Client::Client(std::string serverIp, int port, size_t messageBufferSize) : 
+        messageBuffer(DEFAULT_MESSAGE_BUFFER_SIZE),
+        clientSocketWrapp(messageBuffer, errcallback, dbgcallback)
     {
         serverIp = serverIp;
         port = port;
         messageBufferSize = messageBufferSize;
 
     }
+    
 
     void Client::dbgcallback(std::string msg)
     {
@@ -59,20 +63,24 @@ void Client::readMessagesInLoop()
     {
         while(isConectionActive())
         {
-            Data incommingMsg = clientSocketWrapp.receiveMessage(clientSocketWrapp.getSocketFd());
-            if (sizeof(incommingMsg) > 0)
+            std::unique_lock<std::mutex> mlock(mutex_);
+            std::pair<void*, size_t> incommingMsg = clientSocketWrapp.receiveMessage(clientSocketWrapp.getSocketFd());
+            if (incommingMsg.second > 0)
             {
-                readQueue.push(incommingMsg);
+                Data* data = (Data*)incommingMsg.first;
+                readQueue.push(*data);
                 std::cout << "msg client> " << sizeof(incommingMsg) <<std::endl;
             }
+            mlock.unlock();
         }
     }
+
 
     void Client::sendMsg(const Data& msg) 
     {
         if(isConectionActive())
         {
-            clientSocketWrapp.sendMessage(clientSocketWrapp.getSocketFd(), msg);
+            clientSocketWrapp.sendMessage(clientSocketWrapp.getSocketFd(), std::pair((void*)&msg, (size_t)sizeof(msg)));
         }
     }
 
@@ -80,6 +88,11 @@ void Client::readMessagesInLoop()
     void Client::readMessagesInThread() 
     {
         std::thread(&Client::readMessagesInLoop, this).detach();
+    }
+    
+    Data Client::getFromReadQueue() 
+    {
+        return readQueue.pop();
     }
 
 } // namespace communication

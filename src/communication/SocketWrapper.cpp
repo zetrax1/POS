@@ -3,26 +3,23 @@
 namespace communication
 {
 
-    SocketWrapper::SocketWrapper(size_t bufferSize, void(&aErrorCallback)(std::string), void(&aDebugCallback)(std::string)):
+    SocketWrapper::SocketWrapper(std::vector<char>& aMessageBuffer, void(&aErrorCallback)(std::string), void(&aDebugCallback)(std::string)):
         errorCallback (aErrorCallback),
         debugCallback (aDebugCallback),
-        messageBuffer (new char[bufferSize]),
-        messageBufferSize (bufferSize)
+        messageBuffer (aMessageBuffer)
     {
-        //todo: init client init server
+
     }
 
     SocketWrapper::~SocketWrapper()
-    {
-        delete [] messageBuffer;
+    {        
         close(sokcetFd);
         if(clientsSocketFd.size() > 0)
         {
             for (size_t i = 0; i < clientsSocketFd.size(); i++)
             {
                 close(i);
-            }
-            
+            }   
         }
     }
 
@@ -141,25 +138,22 @@ namespace communication
         return 0;
     }
 
-    int SocketWrapper::sendMessage(int clientSocketFd, const Data& message)
+    int SocketWrapper::sendMessage(int clientSocketFd, const std::pair<void *, size_t>& message)
     {
         if (debugCallback) debugCallback("sent");
-        return send(clientSocketFd, &message, sizeof(message), 0);
+        return send(clientSocketFd, message.first, message.second, 0);
     }
 
-    Data SocketWrapper::receiveMessage(int clientSocketFd)
+    std::pair<void *, size_t> SocketWrapper::receiveMessage(int clientSocketFd)
     {    
-        int len = read(clientSocketFd, messageBuffer, messageBufferSize);
+        int len = read(clientSocketFd, &messageBuffer[0], messageBuffer.size());
+
         if(len > 0)
         {
-            if (debugCallback) debugCallback("received");
-
-            //return std::string(messageBuffer, len);
-            Data* data = (Data*)messageBuffer;
-            return *data;
+            if (debugCallback) debugCallback("received");            
         }
 
-        return {};
+        return std::pair(&messageBuffer[0], (size_t)len);
     }
 
     int SocketWrapper::serverGetClientSocketFd(int number)

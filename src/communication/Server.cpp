@@ -2,13 +2,18 @@
 
 namespace communication
 {
-    Server::Server() : serverSocketWrapp(DEFAULT_MESSAGE_BUFFER_SIZE, errcallback, dbgcallback)
+    Server::Server() : 
+    messageBuffer(DEFAULT_MESSAGE_BUFFER_SIZE),
+    serverSocketWrapp(messageBuffer, errcallback, dbgcallback)
+    
     {
         port = DEFAULT_PORT;
         messageBufferSize = DEFAULT_MESSAGE_BUFFER_SIZE;
     }
 
-    Server::Server(int port, size_t messageBufferSize) : serverSocketWrapp(messageBufferSize, errcallback, dbgcallback)
+    Server::Server(int port, size_t messageBufferSize) : 
+    messageBuffer(messageBufferSize),
+    serverSocketWrapp(messageBuffer, errcallback, dbgcallback)
     {
         port = port;
         messageBufferSize = messageBufferSize;
@@ -18,50 +23,53 @@ namespace communication
     {
         serverSocketWrapp.initServer(port);
         listenClientsInThread();
-        readMessagesInThread();
     }
 
-    void Server::sendMsg(int clientIndex, const Data& msg)
+    void Server::sendMsg(int clientIndex, const Data &msg)
     {
         if (serverRunning())
         {
-            serverSocketWrapp.sendMessage(serverSocketWrapp.serverGetClientSocketFd(clientIndex), msg);
+            serverSocketWrapp.sendMessage(serverSocketWrapp.serverGetClientSocketFd(clientIndex), std::pair((void *)&msg, sizeof(msg)));
         }
     }
-    
-    void Server::sendMsg(const Data& msg) 
+
+    void Server::sendMsg(const Data &msg)
     {
         if (serverRunning())
         {
-            for(int i = 0; i != serverSocketWrapp.getClientsCount(); i++) 
-            { 
-                serverSocketWrapp.sendMessage(serverSocketWrapp.serverGetClientSocketFd(i), msg);
-            }
-        }
-    }
-    
-    void Server::readMessages() 
-    {
-        while(serverRunning())
-        {
-            for(int i = 0; i < serverSocketWrapp.getClientsCount(); i++) 
+            for (int i = 0; i != serverSocketWrapp.getClientsCount(); i++)
             {
-                if(serverSocketWrapp.serverGetClientSocketFd(i) > 0)
-                {
-                    Data incommingMsg = serverSocketWrapp.receiveMessage(serverSocketWrapp.serverGetClientSocketFd(i));
-                    if (sizeof(incommingMsg) != 0)
-                    {
-                        readQueue.push(incommingMsg);
-                        std::cout << "msg server> " << sizeof(incommingMsg) << std::endl;
-                    }
-                }
+                serverSocketWrapp.sendMessage(serverSocketWrapp.serverGetClientSocketFd(i), std::pair((void *)&msg, sizeof(msg)));
             }
         }
     }
     
-    void Server::readMessagesInThread() 
+    std::pair<Data, int> Server::getFromReadQueue() 
     {
-        std::thread(&Server::readMessages, this).detach();
+        return readQueue.pop();
+    }
+
+    void Server::readMessages(int index)
+    {
+        int fd = serverSocketWrapp.serverGetClientSocketFd(index);
+        while (fd > 0)
+        {
+            std::unique_lock<std::mutex> mlock(mutex_);
+            std::pair<void *, size_t> incommingMsg = serverSocketWrapp.receiveMessage(fd);
+            if (incommingMsg.second > 0)
+            {
+                Data *data = (Data*)incommingMsg.first;
+                readQueue.push(std::pair(*data, fd));
+                std::cout << "msg server> " << sizeof(incommingMsg) << " " << fd << std::endl;
+            }
+
+            mlock.unlock();
+        }
+    }
+
+    void Server::readMessagesInThread()
+    {
+        std::thread(&Server::readMessages, this, serverSocketWrapp.getClientsCount() - 1).detach();
     }
 
     void Server::listenClientsInThread()
@@ -87,6 +95,7 @@ namespace communication
         {
             serverSocketWrapp.serverListen();
             serverSocketWrapp.serverAccept();
+            readMessagesInThread();
         }
     }
 
