@@ -10,6 +10,7 @@
 #include "Data.hpp"
 #include <vector>
 #include <mutex>
+#include <chrono>
 
 namespace communication
 {
@@ -20,10 +21,9 @@ namespace communication
     public:
         Client();
         Client(std::string serverIp, int port, size_t messageBufferSize);
-        void connectToServer();
+        
         void sendMsg(const Data&);        
         Data getFromReadQueue();
-
 
     private:
         
@@ -35,7 +35,7 @@ namespace communication
         SocketWrapper clientSocketWrapp;
         std::mutex mutex_;
 
-
+        void connectToServer();
         void readMessagesInLoop();
         bool isConectionActive();
         void readMessagesInThread();

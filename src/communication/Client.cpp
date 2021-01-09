@@ -14,6 +14,7 @@ namespace communication
         serverIp = DEFAULT_IP;
         port = DEFAULT_PORT;
         messageBufferSize = DEFAULT_MESSAGE_BUFFER_SIZE;
+        connectToServer();
     }
 
     Client::Client(std::string serverIp, int port, size_t messageBufferSize) : 
@@ -23,7 +24,7 @@ namespace communication
         serverIp = serverIp;
         port = port;
         messageBufferSize = messageBufferSize;
-
+        connectToServer();
     }
     
 
@@ -72,6 +73,7 @@ void Client::readMessagesInLoop()
                 std::cout << "msg client> " << sizeof(incommingMsg) <<std::endl;
             }
             mlock.unlock();
+            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         }
     }
 

@@ -44,17 +44,16 @@ int main()
     if(choice == 's')
     {
         communication::Server server;
-        server.createServer();
-        //server.sendMsg("maj sa");
+        //std::pair<Data, int> data = server.getFromReadQueue;
         while(true)
         {}
-        
     }
     else
     {
         communication::Client client;
-        client.connectToServer();
         client.sendMsg(Data());
+        while(true)
+        {}
     }
     
     return 0;

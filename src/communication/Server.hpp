@@ -7,6 +7,7 @@
 #include "Data.hpp"
 #include <vector>
 #include <mutex>
+#include <chrono>
 
 #define DEFAULT_PORT 8080
 #define DEFAULT_MESSAGE_BUFFER_SIZE 1024
@@ -19,13 +20,12 @@ namespace communication
     public:
         Server();
         Server(int port, size_t messageBufferSize);
-        void createServer();
+        
         void sendMsg(int clientIndex, const Data&);
         void sendMsg(const Data&);
         std::pair<Data, int>  getFromReadQueue();
         
     private:
-        
         int port;
         size_t messageBufferSize;
         Queue<std::pair<Data, int> > readQueue;
@@ -33,6 +33,7 @@ namespace communication
         SocketWrapper serverSocketWrapp;
         std::mutex mutex_;
 
+        void createServer();
         bool serverRunning();
         void listenAcceptClientInLoop();
         void listenClientsInThread();

@@ -9,6 +9,7 @@ namespace communication
     {
         port = DEFAULT_PORT;
         messageBufferSize = DEFAULT_MESSAGE_BUFFER_SIZE;
+        createServer();
     }
 
     Server::Server(int port, size_t messageBufferSize) : 
@@ -17,6 +18,7 @@ namespace communication
     {
         port = port;
         messageBufferSize = messageBufferSize;
+        createServer();
     }
 
     void Server::createServer()
@@ -54,16 +56,19 @@ namespace communication
         int fd = serverSocketWrapp.serverGetClientSocketFd(index);
         while (fd > 0)
         {
-            std::unique_lock<std::mutex> mlock(mutex_);
+            
             std::pair<void *, size_t> incommingMsg = serverSocketWrapp.receiveMessage(fd);
             if (incommingMsg.second > 0)
             {
+                std::unique_lock<std::mutex> mlock(mutex_);
                 Data *data = (Data*)incommingMsg.first;
                 readQueue.push(std::pair(*data, fd));
                 std::cout << "msg server> " << sizeof(incommingMsg) << " " << fd << std::endl;
+                mlock.unlock();
             }
 
-            mlock.unlock();
+            
+            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         }
     }
 
