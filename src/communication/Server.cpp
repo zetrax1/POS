@@ -2,20 +2,18 @@
 
 namespace communication
 {
-    Server::Server(void (&clientChangeCallback)(int clientCount)) : 
+    Server::Server() : 
     messageBuffer(DEFAULT_MESSAGE_BUFFER_SIZE),
-    serverSocketWrapp(messageBuffer, errcallback, dbgcallback),
-    clientChangeCallback (clientChangeCallback)    
+    serverSocketWrapp(messageBuffer, errcallback, dbgcallback) 
     {
         port = DEFAULT_PORT;
         messageBufferSize = DEFAULT_MESSAGE_BUFFER_SIZE;
         createServer();
     }
 
-    Server::Server(int port, size_t messageBufferSize, void (&clientChangeCallback)(int clientCount)) : 
+    Server::Server(int port, size_t messageBufferSize) : 
     messageBuffer(messageBufferSize),
-    serverSocketWrapp(messageBuffer, errcallback, dbgcallback),
-    clientChangeCallback (clientChangeCallback)
+    serverSocketWrapp(messageBuffer, errcallback, dbgcallback)
     {
         port = port;
         messageBufferSize = messageBufferSize;
@@ -56,6 +54,16 @@ namespace communication
     {
         return serverSocketWrapp.getCountActiveClients();
     }
+    
+    void Server::setCallClientChangeCallback(std::function<void(int)> callFunction) 
+    {
+        m_callClientChangeCallback = callFunction;
+    }
+    
+    void Server::useCallClientChangeCallback(int param) 
+    {
+        m_callClientChangeCallback(param);
+    }
 
     void Server::readMessages(int index)
     {
@@ -86,7 +94,7 @@ namespace communication
         int d = serverSocketWrapp.deleteClient(fd);
         if (d > 0)
         {
-            clientChangeCallback(-d);
+            useCallClientChangeCallback(-d);
         }        
     }
 
@@ -113,7 +121,7 @@ namespace communication
         {
             serverSocketWrapp.serverListen();
             serverSocketWrapp.serverAccept();
-            clientChangeCallback(serverSocketWrapp.getClientsCount());
+            useCallClientChangeCallback(serverSocketWrapp.getClientsCount());
             readMessagesInThread();
         }
     }
