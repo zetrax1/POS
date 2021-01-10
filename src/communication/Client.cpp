@@ -70,10 +70,9 @@ void Client::readMessagesInLoop()
             {
                 Data* data = (Data*)incommingMsg.first;
                 readQueue.push(*data);
-                std::cout << "msg client> " << sizeof(incommingMsg) <<std::endl;
+                std::cout << "msg server> "<< incommingMsg.second<<" Bytes"<<std::endl;
             }
             mlock.unlock();
-            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         }
     }
 

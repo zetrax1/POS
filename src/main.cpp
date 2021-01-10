@@ -4,56 +4,34 @@
 #include "communication/Server.hpp"
 #include "communication/Data.hpp"
 
-/*
-bool testLambda(const std::function<bool[& test](int)>& hocico) 
-{
-    bool returnValue = hocico(12);
-
-
-    return returnValue;
-}
-*/
-
 
 int main()
 {
-    /*
-    int test = 5;
-    int tets2 = 10;
-
-    bool value1 = testLambda([&](int a) 
-    {
-        test = 20;
-        return a > test;    
-    });
-    
-    bool value2 = testLambda([=](int a) 
-    {
-        test2 = 15;
-        return a < tets2;
-    } );
-
-    std::cout << value1 << std::endl << value2 << std::endl;
-    */
-
-
-
     char choice;
     std::cout<<"stlac s pre server a c pre klienta"<<std::endl;
     std::cin>>choice; 
     if(choice == 's')
     {
         communication::Server server;
-        //std::pair<Data, int> data = server.getFromReadQueue;
+        
+        
         while(true)
-        {}
+        {
+            std::pair<Data, int> data = server.getFromReadQueue();
+            std::cout<<"data from client FD number<"<<data.second<<">--|"<<data.first.a<<" "<<data.first.b<<"|--"<<std::endl;
+            server.sendMsg(Data(data.first.a+1, data.first.a+1));
+        }
     }
     else
     {
         communication::Client client;
-        client.sendMsg(Data());
+        client.sendMsg(Data(20, 'M'));
+
         while(true)
-        {}
+        {
+            Data data = client.getFromReadQueue();
+            std::cout<<"data from server: "<<data.a<<" "<<data.b<<"||--"<<std::endl;
+        }
     }
     
     return 0;

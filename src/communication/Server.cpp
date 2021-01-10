@@ -31,6 +31,7 @@ namespace communication
     {
         if (serverRunning())
         {
+            
             serverSocketWrapp.sendMessage(serverSocketWrapp.serverGetClientSocketFd(clientIndex), std::pair((void *)&msg, sizeof(msg)));
         }
     }
@@ -63,12 +64,10 @@ namespace communication
                 std::unique_lock<std::mutex> mlock(mutex_);
                 Data *data = (Data*)incommingMsg.first;
                 readQueue.push(std::pair(*data, fd));
-                std::cout << "msg server> " << sizeof(incommingMsg) << " " << fd << std::endl;
+                std::cout << "msg server> "<< incommingMsg.second<<" Bytes"<<std::endl;
                 mlock.unlock();
             }
 
-            
-            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         }
     }
 

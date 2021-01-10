@@ -15,7 +15,6 @@
 #include <iterator>
 #include <algorithm>
 #include "Data.hpp"
-#include <atomic>
 
 namespace communication
 {
