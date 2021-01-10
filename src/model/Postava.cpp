@@ -7,7 +7,7 @@ namespace model
 
 
 Postava::Postava() :  m_strelec(std::make_shared<Strelec>()),
-    m_pozicia(0,0)
+    m_pozicia(0,0),m_smer(Smer())
 {    
     setSprite();
     m_sprite.setPosition(0,0);
@@ -51,6 +51,24 @@ void Postava::setSprite()
 sf::Sprite Postava::getSprite() 
 {
     return m_sprite;
+}
+
+void Postava::setSmer(bool up, bool down, bool left, bool right) 
+{
+    m_smer.upFlag = up;
+    m_smer.downFlag = down;
+    m_smer.leftFlag = left;
+    m_smer.rightFlag = right;
+}
+
+void Postava::setSmer(Smer sm) 
+{
+    m_smer = sm;
+}
+
+Smer Postava::getSmer() 
+{
+    return m_smer;
 }
 
 }

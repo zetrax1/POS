@@ -5,6 +5,7 @@
 #include <memory>
 #include "Zbran.hpp"
 #include "Strelec.hpp"
+#include "../model/Smer_struct.hpp"
 
 namespace model
 {
@@ -18,6 +19,7 @@ private:
     std::pair<int,int> m_pozicia;
     sf::Sprite m_sprite;
     sf::Texture m_texture;
+    Smer m_smer;
 
 public:
     Postava();
@@ -31,6 +33,10 @@ public:
 
     void setSprite();
     sf::Sprite getSprite();
+
+    void setSmer(bool up, bool down, bool left, bool right);
+    void setSmer(Smer sm);
+    Smer getSmer();
     
 };
 

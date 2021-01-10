@@ -4,11 +4,11 @@ namespace view
 {
 
     Monitor_view::Monitor_view(/* args */) : m_desktopMode(sf::VideoMode::getDesktopMode()),
-                                             window(sf::VideoMode(m_desktopMode.width-50,
-                                                                  m_desktopMode.height-50,
+                                             window(sf::VideoMode(m_desktopMode.width,
+                                                                  m_desktopMode.height,
                                                                   m_desktopMode.bitsPerPixel),
                                                     "Game",
-                                                    sf::Style::None)
+                                                    sf::Style::Default)
 
     {
         window.setVerticalSyncEnabled(true);
@@ -27,6 +27,12 @@ namespace view
     sf::RenderWindow &Monitor_view::get() 
     {
         return window;
+    }
+    
+    std::pair<int, int> Monitor_view::getSize() 
+    {
+        std::pair<int, int>  tmp(m_desktopMode.width, m_desktopMode.height);
+        return tmp;
     }
 
 

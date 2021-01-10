@@ -2,6 +2,7 @@
 #define __DATA_H__
 
 #include <iostream>
+#include "../model/Smer_struct.hpp"
 
 enum typeMessage
 {
@@ -10,15 +11,6 @@ enum typeMessage
     initMessage = 2,
 };
 
-struct Smer
-{
-    bool upFlag;
-    bool downFlag;
-    bool leftFlag;
-    bool rightFlag;
-    Smer() : upFlag(false), downFlag(false), leftFlag(false), rightFlag(false) {}
-    Smer(bool up, bool down, bool left, bool right) : upFlag(up), downFlag(down), leftFlag(left), rightFlag(right) {}
-};
 class Data
 {
 
@@ -43,6 +35,8 @@ public:
 
     int getIndex();
     typeMessage getType();
+
+    Smer getSmer();
 
 };
 

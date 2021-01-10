@@ -99,14 +99,6 @@ int main(int argc, char **argv)
 
         if (argv[1][0] == 's')
         {
-            std::cout << "Server";
-
-            // communication::Server server;
-            // //std::pair<Data, int> data = server.getFromReadQueu();
-            // while (true)
-            // {
-            // }
-
             controler::ControllerServer conServ;
             conServ.init();
 
@@ -114,13 +106,9 @@ int main(int argc, char **argv)
         if (argv[1][0] == 'c')
         {
             controler::Hra hra;
-            model::Postava postava;
-            postava.setPozicia(50, 100);
-            hra.addNewPostava(postava);
             hra.init_hra();
         }
     }
 
     return 0;
 }
-//std::this_thread::sleep_for(std::chrono::nanoseconds(10));
