@@ -2,16 +2,76 @@
 #include <iostream>
 #include <future>
 #include <thread>
-
+#include <chrono>
 namespace controler
 {
-  Hra::Hra() 
+
+  Hra::Hra()
   {
   }
 
   Hra::~Hra()
   {
+  }
 
+  void Hra::moveItems()
+  {
+    while (m_isRun)
+    {
+
+      for (int i = 0; i < (int)m_postava.size(); i++)
+      {
+        auto x = getPostava(i).getPozicia().first;
+        auto y = getPostava(i).getPozicia().second;
+        Smer smer = readSmerFromVector(i);
+
+        if (smer.leftFlag)
+          x -= SPRITE_SPEED;
+        if (smer.rightFlag)
+          x += SPRITE_SPEED;
+        if (smer.upFlag)
+          y -= SPRITE_SPEED;
+        if (smer.downFlag)
+          y += SPRITE_SPEED;
+
+        // Check screen boundaries
+        if (x < 0)
+          x = 0;
+        if (x > sizeWin.first)
+          x = sizeWin.first;
+        if (y < 0)
+          y = 0;
+        if (y > sizeWin.second)
+          y = sizeWin.second;
+
+        writeToVector(x, y, i);
+      }
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+  }
+
+  Smer Hra::readSmerFromVector(int index)
+  {
+    return m_postava[index].getSmer();
+  }
+
+  void Hra::writeToVector(int x, int y, int index)
+  {
+    std::unique_lock<std::mutex> mlock(mutex_);
+
+    m_postava[index].setPozicia(x, y);
+
+    mutex_.unlock();
+  }
+  
+  void Hra::writeToVector(Smer smer,int index) 
+  {
+    std::unique_lock<std::mutex> mlock(mutex_);
+
+    m_postava[index].setSmer(smer);
+
+    mutex_.unlock();
   }
 
   void Hra::setMapa(model::Mapa map)
@@ -34,131 +94,94 @@ namespace controler
   {
     // Process events
     sf::Event event;
-      bool upFlag = false;
-      bool downFlag = false;
-      bool leftFlag = false;
-      bool rightFlag = false;
-      bool change = false;
+    bool upFlag = false;
+    bool downFlag = false;
+    bool leftFlag = false;
+    bool rightFlag = false;
+    bool change = false;
 
-      while (window.pollEvent(event))
+    while (window.pollEvent(event))
+    {
+      if (event.type == sf::Event::Closed)
+        window.close();
+
+      if (event.type == sf::Event::KeyPressed)
       {
-        // Close the window if a key is pressed or if requested
-        if (event.type == sf::Event::Closed)
+        switch (event.key.code)
+        {
+        case sf::Keyboard::Escape:
           window.close();
+          break;
 
-        // If a key is pressed
-        if (event.type == sf::Event::KeyPressed)
-        {
-          switch (event.key.code)
-          {
-          // If escape is pressed, close the application
-          case sf::Keyboard::Escape:
-            window.close();
-            break;
-
-          // Process the up, down, left and right keys
-          case sf::Keyboard::Up:
-            upFlag = true;
-            change = true;
-            break;
-          case sf::Keyboard::Down:
-            downFlag = true;
-            change = true;
-            break;
-          case sf::Keyboard::Left:
-            leftFlag = true;
-            change = true;
-            break;
-          case sf::Keyboard::Right:
-            rightFlag = true;
-            change = true;
-            break;
-          default:
-            break;
-          }
-        }
-
-        // If a key is released
-        if (event.type == sf::Event::KeyReleased)
-        {
-          switch (event.key.code)
-          {
-          // Process the up, down, left and right keys
-          case sf::Keyboard::Up:
-            upFlag = false;
-            change = true;
-            break;
-          case sf::Keyboard::Down:
-            downFlag = false;
-            change = true;
-            break;
-          case sf::Keyboard::Left:
-            leftFlag = false;
-            change = true;
-            break;
-          case sf::Keyboard::Right:
-            rightFlag = false;
-            change = true;
-            break;
-          default:
-            break;
-          }
+        case sf::Keyboard::Up:
+          upFlag = true;
+          change = true;
+          break;
+        case sf::Keyboard::Down:
+          downFlag = true;
+          change = true;
+          break;
+        case sf::Keyboard::Left:
+          leftFlag = true;
+          change = true;
+          break;
+        case sf::Keyboard::Right:
+          rightFlag = true;
+          change = true;
+          break;
+        default:
+          break;
         }
       }
 
-      if (change == true)
+      if (event.type == sf::Event::KeyReleased)
       {
-        client.sendMsg(Data(m_indexClient, Smer(upFlag, downFlag, leftFlag, rightFlag)));
-        change = false;
+        switch (event.key.code)
+        {
+        case sf::Keyboard::Up:
+          upFlag = false;
+          change = true;
+          break;
+        case sf::Keyboard::Down:
+          downFlag = false;
+          change = true;
+          break;
+        case sf::Keyboard::Left:
+          leftFlag = false;
+          change = true;
+          break;
+        case sf::Keyboard::Right:
+          rightFlag = false;
+          change = true;
+          break;
+        default:
+          break;
+        }
       }
-   
+    }
 
-    //todo
-    // // Process events
-    // // Update coordinates
-    // if (leftFlag)
-    //   x -= SPRITE_SPEED;
-    // if (rightFlag)
-    //   x += SPRITE_SPEED;
-    // if (upFlag)
-    //   y -= SPRITE_SPEED;
-    // if (downFlag)
-    //   y += SPRITE_SPEED;
-
-    // // Check screen boundaries
-
-    // if (x < 0)
-    //   x = 0;
-    // if (x > (int)window.getSize().x)
-    //   x = window.getSize().x;
-    // if (y < 0)
-    //   y = 0;
-    // if (y > (int)window.getSize().y)
-    //   y = window.getSize().y;
+    if (change == true)
+    {
+      client.sendMsg(Data(m_indexClient, Smer(upFlag, downFlag, leftFlag, rightFlag)));
+      change = false;
+    }
   }
-
-
 
   bool Hra::messageReaction()
   {
-    // todo   get data
     Data data = client.getFromReadQueue();
 
     switch (data.getType())
     {
     case typeMessage::pohyb:
-      /* code */
-      messagePohyb() ;
-      std::cout << "pohyb sprav prisla";
+      messagePohyb(data);
       break;
     case typeMessage::newClient:
-      /* code */
-      std::cout << "new Client sprav prisla";
+      messageNewClient();
       break;
 
     case typeMessage::initMessage:
-      //m_indexClient = data.getIndex();
-      std::cout << "init Message sprav prisla";
+      messageInit(data);
 
       break;
 
@@ -167,30 +190,39 @@ namespace controler
     }
     return true;
   }
-  
-  void Hra::messagePohyb() 
+
+  void Hra::messagePohyb(Data &data)
   {
-    
+    writeToVector(data.getSmer(),data.getIndex());
   }
-  
-  void Hra::messageInit() 
+
+  void Hra::messageInit(Data &data)
   {
-    
+    m_indexClient = data.getIndex();
+    std::unique_lock<std::mutex> mlock(mutex_);
+    for (int i = 0; i < m_indexClient - 1; i++)
+    {
+     addNewPostava(model::Postava());
+
+    }
+    mutex_.unlock();
   }
-  
-  void Hra::messageNewClient() 
+
+  void Hra::messageNewClient()
   {
-    
+    std::unique_lock<std::mutex> mlock(mutex_);
+    addNewPostava(model::Postava());
+    mutex_.unlock();
   }
 
   void Hra::init_hra()
   {
-    std::cout << "window ,,,";
     view::Monitor_view monitorView;
     sf::RenderWindow &window = monitorView.get();
-    std::cout << "ovladanie ,,,";
+    sizeWin = monitorView.getSize();
+    addNewPostava(model::Postava());
 
-    //std::thread(&controler::Hra::ovladanie_hry, this, std::ref(monitorView.get())).detach();
+    std::thread(&controler::Hra::moveItems, this).detach();
     std::future<bool> fut = std::async(&controler::Hra::messageReaction, this);
 
     while (window.isOpen())
@@ -209,6 +241,11 @@ namespace controler
     {
       return;
     }
-   }
+
+    std::unique_lock<std::mutex> mlock(mutex_);
+    m_isRun = false;
+    mutex_.unlock();
+
+  }
 
 } // namespace controler

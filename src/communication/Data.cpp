@@ -39,3 +39,8 @@ typeMessage Data::getType()
 {
     return m_typ;
 }
+
+Smer Data::getSmer() 
+{
+    return m_smer;
+}

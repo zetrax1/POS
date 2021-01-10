@@ -22,6 +22,8 @@ public:
     bool open();
 
     sf::RenderWindow& get();
+
+    std::pair<int, int> getSize();
 };
 
 
