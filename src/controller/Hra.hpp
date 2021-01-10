@@ -4,6 +4,7 @@
 #include "../model/Mapa.hpp"
 #include "../model/Postava.hpp"
 #include "../view/MonitorView.hpp"
+#include "../communication/Client.hpp"
 
 #include <vector>
 
@@ -21,6 +22,7 @@ namespace controler
         std::vector<model::Postava>::iterator i_postava;
         sf::Event event;
         view::Monitor_view *m_monitorView;
+        communication::Client client;
 
         bool upFlag = false;
         bool downFlag = false;

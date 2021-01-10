@@ -3,7 +3,7 @@
 
 namespace controler
 {
-  Hra::Hra(/* args */) : m_monitorView(new view::Monitor_view)
+  Hra::Hra() : m_monitorView(new view::Monitor_view)
   {
   }
 
@@ -117,12 +117,12 @@ namespace controler
     if (y > (int)window.getSize().y)
       y = window.getSize().y;
 
-    getPostava(0).setPozicia(x, y);
+    //getPostava(0).setPozicia(x, y);
+    client.sendMsg(Data(x,y));
   }
 
   void Hra::init_hra()
   {
-
 
     sf::RenderWindow &window = m_monitorView->get();
 
@@ -130,6 +130,8 @@ namespace controler
     while (window.isOpen())
     {
       ovladanie_hry();
+
+      
 
       window.clear(sf::Color(127, 127, 127));
       window.draw(getPostava(0).getSprite());

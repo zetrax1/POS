@@ -66,9 +66,6 @@ namespace communication
                 std::cout << "msg server> " << sizeof(incommingMsg) << " " << fd << std::endl;
                 mlock.unlock();
             }
-
-            
-            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         }
     }
 
