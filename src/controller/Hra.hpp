@@ -20,17 +20,13 @@ namespace controler
         model::Mapa m_mapa;
         std::vector<model::Postava> m_postava;
         std::vector<model::Postava>::iterator i_postava;
-        sf::Event event;
-        view::Monitor_view *m_monitorView;
+        view::Monitor_view m_monitorView;
         communication::Client client;
+        int m_indexClient = 0;
 
-        bool upFlag = false;
-        bool downFlag = false;
-        bool leftFlag = false;
-        bool rightFlag = false;
 
     public:
-        Hra(/* args */);
+        Hra();
         ~Hra();
 
         void init_hra();
@@ -41,7 +37,9 @@ namespace controler
 
         model::Postava& getPostava(int i_postava);
 
-        void ovladanie_hry();
+        void ovladanie_hry(sf::RenderWindow &window);
+
+        bool messageReaction();
 
     };
 

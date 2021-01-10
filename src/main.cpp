@@ -4,6 +4,7 @@
 #include "communication/Server.hpp"
 #include "communication/Data.hpp"
 #include "controller/Hra.hpp"
+#include "controller/ControllerServer.hpp"
 #include "model/Postava.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -100,11 +101,15 @@ int main(int argc, char **argv)
         {
             std::cout << "Server";
 
-            communication::Server server;
-            //std::pair<Data, int> data = server.getFromReadQueu();
-            while (true)
-            {
-            }
+            // communication::Server server;
+            // //std::pair<Data, int> data = server.getFromReadQueu();
+            // while (true)
+            // {
+            // }
+
+            controler::ControllerServer conServ;
+            conServ.init();
+
         }
         if (argv[1][0] == 'c')
         {

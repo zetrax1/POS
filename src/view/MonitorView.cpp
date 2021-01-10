@@ -4,11 +4,11 @@ namespace view
 {
 
     Monitor_view::Monitor_view(/* args */) : m_desktopMode(sf::VideoMode::getDesktopMode()),
-                                             window(sf::VideoMode(m_desktopMode.width,
-                                                                  m_desktopMode.height,
+                                             window(sf::VideoMode(m_desktopMode.width-50,
+                                                                  m_desktopMode.height-50,
                                                                   m_desktopMode.bitsPerPixel),
                                                     "Game",
-                                                    sf::Style::Fullscreen)
+                                                    sf::Style::None)
 
     {
         window.setVerticalSyncEnabled(true);
