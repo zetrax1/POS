@@ -20,10 +20,10 @@ Data::Data(const Data &d)
 {
     suradnice.first = d.suradnice.first;
     suradnice.second = d.suradnice.second;
-    // m_typ = d.m_typ;
-    // m_indexClient =d.m_indexClient;
-    // m_typ = d.m_typ;
-    // m_smer = d.m_smer;
+    m_typ = d.m_typ;
+    m_indexClient =d.m_indexClient;
+    m_typ = d.m_typ;
+    m_smer = d.m_smer;
 }
 
 Data::~Data()

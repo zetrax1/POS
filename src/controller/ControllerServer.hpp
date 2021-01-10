@@ -4,6 +4,7 @@
 #include "../communication/Server.hpp"
 #include "../communication/Data.hpp"
 #include <iostream>
+#include <functional>
 
 namespace controler
 {
@@ -11,19 +12,14 @@ namespace controler
 class ControllerServer
 {
 private:
-    static void clientChangeCallback(int clientCount);
+    void clientChangeCallback(int clientCount);
     communication::Server server;
-    
-    std::pair<Data, int> m_data;
-    
-    int iteratorOfClient =0;
-    
+    std::pair<Data, int> m_data;   
     
 
 public:
-    ControllerServer(/* args */);
+    ControllerServer();
     ~ControllerServer();
-
     void init();
 };
 
