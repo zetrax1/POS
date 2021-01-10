@@ -67,6 +67,7 @@ namespace controler
   
   void Hra::writeToVector(Smer smer,int index) 
   {
+    std::cout << smer.downFlag << smer.leftFlag << smer.rightFlag << smer.upFlag << "\n";
     std::unique_lock<std::mutex> mlock(mutex_);
 
     m_postava[index].setSmer(smer);
@@ -172,12 +173,14 @@ namespace controler
 
   bool Hra::messageReaction()
   {
+    while(m_isRun)
+    {
     Data data = client.getFromReadQueue();
-    std::cout << "prisla sprava";
+   // std::cout << "prisla sprava \n";
     switch (data.getType())
     {
     case typeMessage::pohyb:
-      std::cout << "prisla sprava pohyb";
+      std::cout << "prisla sprava pohyb \n";
       messagePohyb(data);
       //std::cout << "prisla sprava pohyb";
       break;
@@ -187,11 +190,12 @@ namespace controler
 
     case typeMessage::initMessage:
       messageInit(data);
-      std::cout << "prisla sprava init";
+      std::cout << "prisla sprava init \n";
       break;
 
     default:
       break;
+    }
     }
     return true;
   }

@@ -33,15 +33,16 @@ namespace controler
     void ControllerServer::init() 
     {
 
-        do
+        while (true)
         {
                 
             m_data = server.getFromReadQueue();
+            std::cout << "dostal spravu  \n";
             switch (m_data.first.getType())
             {
                 case typeMessage::pohyb:
                 {
-                    std::cout << "pohyb sprav prisla";
+                    std::cout << "dostal spravu pohyb server \n";
                     server.sendMsg(m_data.first);
                 }
                 break;
@@ -67,7 +68,7 @@ namespace controler
 
 
         } 
-        while (std::cin.get() != 27);
+        
         
     }
 
