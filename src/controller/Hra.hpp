@@ -20,9 +20,9 @@ namespace controler
         model::Mapa m_mapa;
         std::vector<model::Postava> m_postava;
         std::vector<model::Postava>::iterator i_postava;
-        view::Monitor_view m_monitorView;
         communication::Client client;
         int m_indexClient = 0;
+        std::mutex mutex_;
 
 
     public:
@@ -41,6 +41,9 @@ namespace controler
 
         bool messageReaction();
 
+        void messagePohyb();
+        void messageInit();
+        void messageNewClient();
     };
 
 } // namespace controler

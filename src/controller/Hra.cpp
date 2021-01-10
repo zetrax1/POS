@@ -34,9 +34,6 @@ namespace controler
   {
     // Process events
     sf::Event event;
-    // while (window.isOpen())
-    // {
-     
       bool upFlag = false;
       bool downFlag = false;
       bool leftFlag = false;
@@ -114,7 +111,7 @@ namespace controler
         client.sendMsg(Data(m_indexClient, Smer(upFlag, downFlag, leftFlag, rightFlag)));
         change = false;
       }
- //   }
+   
 
     //todo
     // // Process events
@@ -140,6 +137,8 @@ namespace controler
     //   y = window.getSize().y;
   }
 
+
+
   bool Hra::messageReaction()
   {
     // todo   get data
@@ -149,6 +148,7 @@ namespace controler
     {
     case typeMessage::pohyb:
       /* code */
+      messagePohyb() ;
       std::cout << "pohyb sprav prisla";
       break;
     case typeMessage::newClient:
@@ -167,38 +167,48 @@ namespace controler
     }
     return true;
   }
+  
+  void Hra::messagePohyb() 
+  {
+    
+  }
+  
+  void Hra::messageInit() 
+  {
+    
+  }
+  
+  void Hra::messageNewClient() 
+  {
+    
+  }
 
   void Hra::init_hra()
   {
-  std::cout << "window ,,,";
+    std::cout << "window ,,,";
+    view::Monitor_view monitorView;
+    sf::RenderWindow &window = monitorView.get();
+    std::cout << "ovladanie ,,,";
 
-    sf::RenderWindow &window = m_monitorView.get();
-      std::cout << "ovladanie ,,,";
+    //std::thread(&controler::Hra::ovladanie_hry, this, std::ref(monitorView.get())).detach();
+    std::future<bool> fut = std::async(&controler::Hra::messageReaction, this);
 
-    std::thread(&controler::Hra::ovladanie_hry, this ,std::ref(window)).detach();
-    
-    
-  std::cout << "init ,,,";
     while (window.isOpen())
     {
-     
-      window.clear(sf::Color(127, 127, 127));
-      //std::thread(&controler::Hra::ovladanie_hry, this ,std::ref(window)).detach();
-    
+      ovladanie_hry(std::ref(monitorView.get()));
 
       for (model::Postava n : m_postava)
       {
         window.draw(n.getSprite());
       }
 
-      //window.draw(getPostava(0).getSprite());
-
-      // Update display and wait for vsync
       window.display();
-      messageReaction();
-     // std::thread(&controler::Hra::messageReaction, this ).detach();
-
     }
-  }
+
+    if (fut.get())
+    {
+      return;
+    }
+   }
 
 } // namespace controler
