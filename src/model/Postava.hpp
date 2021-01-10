@@ -23,6 +23,7 @@ private:
 
 public:
     Postava();
+    Postava(int x , int y);
     ~Postava();
 
     std::shared_ptr<Strelec> getStrelec();

@@ -34,7 +34,7 @@ namespace controler
         void writeToVector(Smer smer,int index);
         void messagePohyb(Data &data);
         void messageInit(Data &data);
-        void messageNewClient();
+        void messageNewClient(Data &data);
         bool messageReaction();
         void ovladanie_hry(sf::RenderWindow &window);
         void addNewPostava(const model::Postava &postava);

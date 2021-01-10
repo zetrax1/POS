@@ -37,6 +37,8 @@ public:
     typeMessage getType();
 
     Smer getSmer();
+    std::pair<int, int> getSuradnice();
+
 
 };
 

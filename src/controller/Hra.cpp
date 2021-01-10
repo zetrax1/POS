@@ -177,7 +177,7 @@ namespace controler
       messagePohyb(data);
       break;
     case typeMessage::newClient:
-      messageNewClient();
+      messageNewClient(data);
       break;
 
     case typeMessage::initMessage:
@@ -208,10 +208,11 @@ namespace controler
     mutex_.unlock();
   }
 
-  void Hra::messageNewClient()
+  void Hra::messageNewClient(Data &data)
   {
     std::unique_lock<std::mutex> mlock(mutex_);
-    addNewPostava(model::Postava());
+
+    addNewPostava(model::Postava(data.getSuradnice().first,data.getSuradnice().second));
     mutex_.unlock();
   }
 
