@@ -4,8 +4,14 @@
 
 namespace controler
 {
+    void ControllerServer::clientChangeCallback(int clientCount) 
+    {
+        
+    }
 
-ControllerServer::ControllerServer() : m_data(Data(0),0)
+
+ControllerServer::ControllerServer() : server(clientChangeCallback),
+                                       m_data(Data(0),0)
 {
 }
 
@@ -19,28 +25,28 @@ void ControllerServer::init()
     do
     {
             
-    // m_data = server.getFromReadQueue();
-    // switch (m_data.first.getType())
-    // {
-    //   case typeMessage::pohyb:
-    //     /* code */
-    //     std::cout << "pohyb sprav prisla";
-    //     break;
-    //   case typeMessage::newClient:
-    //     /* code */
-    //     std::cout << "new Client sprav prisla";
-    //     break;
+    m_data = server.getFromReadQueue();
+    switch (m_data.first.getType())
+    {
+      case typeMessage::pohyb:
+        /* code */
+        std::cout << "pohyb sprav prisla";
+        break;
+      case typeMessage::newClient:
+        /* code */
+        std::cout << "new Client sprav prisla";
+        break;
 
-    //   case typeMessage::initMessage:
-    //     //m_indexClient = data.getIndex();
-    //     std::cout << "init Message sprav prisla";
+      case typeMessage::initMessage:
+        //m_indexClient = data.getIndex();
+        std::cout << "init Message sprav prisla";
 
 
-    //     break;
+        break;
 
-    //   default:
-    //     break;
-    // }
+      default:
+        break;
+    }
 
 
     } 

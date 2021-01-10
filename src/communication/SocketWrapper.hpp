@@ -36,6 +36,8 @@ namespace communication
         int getSocketFd();
         int getClientsCount();
         void closeFd(int fd);
+        int deleteClient(int fd);
+        int getCountActiveClients();
         
         
     private:

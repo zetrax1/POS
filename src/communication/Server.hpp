@@ -18,12 +18,13 @@ namespace communication
     class Server
     {
     public:
-        Server();
-        Server(int port, size_t messageBufferSize);
+        Server(void (&clientChangeCallback)(int clientCount));
+        Server(int port, size_t messageBufferSize, void (&clientChangeCallback)(int clientCount));
         
         void sendMsg(int clientIndex, const Data&);
         void sendMsg(const Data&);
         std::pair<Data, int>  getFromReadQueue();
+        int getActiveClients();
         
     private:
         int port;
@@ -39,7 +40,9 @@ namespace communication
         void listenClientsInThread();
         void readMessages(int index);
         void readMessagesInThread();
-
+        void deleteClient(int fd);
+        
+        void (&clientChangeCallback)(int clientCount);
         static void errcallback(std::string msg);
         static void dbgcallback(std::string msg);
     };

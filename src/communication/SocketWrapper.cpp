@@ -140,8 +140,14 @@ namespace communication
 
     int SocketWrapper::sendMessage(int clientSocketFd, const std::pair<void *, size_t>& message)
     {
-        if (debugCallback) debugCallback("sent");
-        return send(clientSocketFd, message.first, message.second, 0);
+        if (debugCallback && clientSocketFd > 0) debugCallback("sent");
+        
+        if(clientSocketFd > 1)
+        {
+            return send(clientSocketFd, message.first, message.second, 0);
+        }
+        
+        return 0;
     }
 
     std::pair<void *, size_t> SocketWrapper::receiveMessage(int clientSocketFd)
@@ -174,6 +180,34 @@ namespace communication
     void SocketWrapper::closeFd(int fd) 
     {
         close(fd);
+    }
+    
+    int SocketWrapper::deleteClient(int fd) 
+    {
+        for (int i = 0; i < (int)clientsSocketFd.size(); i++)
+        {
+            if(clientsSocketFd[i] == fd)
+            {
+                clientsSocketFd[i] = 0;
+                return i;
+            }
+        }
+
+        return -1;
+    }
+    
+    int SocketWrapper::getCountActiveClients() 
+    {
+        int active  = 0;
+        for (int i = 0; i < (int)clientsSocketFd.size(); i++)
+        {
+            if(clientsSocketFd[i] > 0)
+            {
+                active++;
+            }
+        }
+
+        return active;
     }
 }
 

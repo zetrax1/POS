@@ -11,9 +11,14 @@ namespace controler
 class ControllerServer
 {
 private:
+    static void clientChangeCallback(int clientCount);
     communication::Server server;
-    int iteratorOfClient =0;
+    
     std::pair<Data, int> m_data;
+    
+    int iteratorOfClient =0;
+    
+    
 
 public:
     ControllerServer(/* args */);
