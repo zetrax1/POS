@@ -1,4 +1,4 @@
-#include "mapa.hpp"
+#include "Mapa.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -16,6 +16,7 @@ Mapa::~Mapa()
 
 Mapa& Mapa::operator=(Mapa &x) 
 {
+    *this = x; 
     return (*this);
 }
 
@@ -33,3 +34,4 @@ sf::Texture Mapa::getTexture()
 }
 
 }
+

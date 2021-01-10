@@ -1,7 +1,7 @@
 #ifndef __STRELEC_H__
 #define __STRELEC_H__
 
-#include "../view/strelec_view.hpp"
+#include "../view/StrelecView.hpp"
 namespace model
 {
 

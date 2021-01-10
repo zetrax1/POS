@@ -73,7 +73,6 @@ void Client::readMessagesInLoop()
                 std::cout << "msg client> " << sizeof(incommingMsg) <<std::endl;
             }
             mlock.unlock();
-            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         }
     }
 

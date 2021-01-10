@@ -3,60 +3,112 @@
 #include "communication/Client.hpp"
 #include "communication/Server.hpp"
 #include "communication/Data.hpp"
+#include "controller/Hra.hpp"
+#include "controller/ControllerServer.hpp"
+#include "model/Postava.hpp"
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/OpenGL.hpp>
 
-/*
-bool testLambda(const std::function<bool[& test](int)>& hocico) 
+bool isSpriteHover(sf::FloatRect sprite, sf::Vector2f mp)
 {
-    bool returnValue = hocico(12);
-
-
-    return returnValue;
+    if (sprite.contains(mp))
+    {
+        return true;
+    }
+    return false;
 }
-*/
 
-
-int main()
+int menu()
 {
-    /*
-    int test = 5;
-    int tets2 = 10;
+    int retValue = 0;
+    sf::RenderWindow window;
+    window.create(sf::VideoMode(600, 350), "menu!");
 
-    bool value1 = testLambda([&](int a) 
+    sf::Texture texture;
+    if (!texture.loadFromFile("UvodTexture.png"))
     {
-        test = 20;
-        return a > test;    
-    });
-    
-    bool value2 = testLambda([=](int a) 
-    {
-        test2 = 15;
-        return a < tets2;
-    } );
-
-    std::cout << value1 << std::endl << value2 << std::endl;
-    */
-
-
-
-    char choice;
-    std::cout<<"stlac s pre server a c pre klienta"<<std::endl;
-    std::cin>>choice; 
-    if(choice == 's')
-    {
-        communication::Server server;
-        //std::pair<Data, int> data = server.getFromReadQueue;
-        while(true)
-        {}
+        return 0;
     }
-    else
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+
+    sf::Vector2f mp;
+    mp.x = sf::Mouse::getPosition(window).x;
+    mp.y = sf::Mouse::getPosition(window).y;
+
+    while (window.isOpen())
     {
-        communication::Client client;
-        client.sendMsg(Data());
-        while(true)
-        {}
+        sf::Event event;
+
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+
+            if (event.mouseButton.y < 175)
+            {
+                if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+                {
+
+                    window.close();
+                    retValue = 1;
+                }
+            }
+            else
+            {
+                if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
+                {
+
+                    window.close();
+                    retValue = 2;
+                }
+            }
+        }
+        window.clear(sf::Color::White);
+        sprite.setPosition(sf::Vector2f(0, 0));
+        window.draw(sprite);
+
+        window.display();
     }
-    
+    return retValue;
+}
+
+int main(int argc, char **argv)
+{
+
+    if (argc == 1)
+    {
+        int i = menu();
+        if (i == 0)
+        {
+            return 0;
+        }
+        if (i == 1)
+        {
+            std::system("./sfml c");
+        }
+        else
+        {
+            std::system("./sfml s");
+            //std::system("./sfml c");
+        }
+    }
+    if (argc == 2)
+    {
+
+        if (argv[1][0] == 's')
+        {
+            controler::ControllerServer conServ;
+            conServ.init();
+
+        }
+        if (argv[1][0] == 'c')
+        {
+            controler::Hra hra;
+            hra.init_hra();
+        }
+    }
+
     return 0;
 }
-
-

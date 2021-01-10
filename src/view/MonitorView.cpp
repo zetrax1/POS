@@ -1,4 +1,4 @@
-#include "monitor_view.hpp"
+#include "MonitorView.hpp"
 
 namespace view
 {
@@ -8,7 +8,7 @@ namespace view
                                                                   m_desktopMode.height,
                                                                   m_desktopMode.bitsPerPixel),
                                                     "Game",
-                                                    sf::Style::Fullscreen)
+                                                    sf::Style::Default)
 
     {
         window.setVerticalSyncEnabled(true);
@@ -27,6 +27,12 @@ namespace view
     sf::RenderWindow &Monitor_view::get() 
     {
         return window;
+    }
+    
+    std::pair<int, int> Monitor_view::getSize() 
+    {
+        std::pair<int, int>  tmp(m_desktopMode.width, m_desktopMode.height);
+        return tmp;
     }
 
 

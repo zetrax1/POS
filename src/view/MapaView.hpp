@@ -1,6 +1,9 @@
 #ifndef __MAPA_VIEW_H__
 #define __MAPA_VIEW_H__
 
+#include <SFML/Graphics.hpp>
+
+
 namespace view
 {
 
@@ -11,6 +14,8 @@ namespace view
     public:
         Mapa_view(/* args */);
         ~Mapa_view();
+
+        void readTextura(sf::Texture &texture);
     };
 
 } // namespace view

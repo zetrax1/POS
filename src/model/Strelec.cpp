@@ -1,4 +1,4 @@
-#include "strelec.hpp"
+#include "Strelec.hpp"
 
 namespace model
 {

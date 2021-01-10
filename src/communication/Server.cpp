@@ -4,8 +4,7 @@ namespace communication
 {
     Server::Server() : 
     messageBuffer(DEFAULT_MESSAGE_BUFFER_SIZE),
-    serverSocketWrapp(messageBuffer, errcallback, dbgcallback)
-    
+    serverSocketWrapp(messageBuffer, errcallback, dbgcallback) 
     {
         port = DEFAULT_PORT;
         messageBufferSize = DEFAULT_MESSAGE_BUFFER_SIZE;
@@ -50,6 +49,21 @@ namespace communication
     {
         return readQueue.pop();
     }
+    
+    int Server::getActiveClients() 
+    {
+        return serverSocketWrapp.getCountActiveClients();
+    }
+    
+    void Server::setCallClientChangeCallback(std::function<void(int)> callFunction) 
+    {
+        m_callClientChangeCallback = callFunction;
+    }
+    
+    void Server::useCallClientChangeCallback(int param) 
+    {
+        m_callClientChangeCallback(param);
+    }
 
     void Server::readMessages(int index)
     {
@@ -66,15 +80,22 @@ namespace communication
                 std::cout << "msg server> " << sizeof(incommingMsg) << " " << fd << std::endl;
                 mlock.unlock();
             }
-
-            
-            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         }
+
     }
 
     void Server::readMessagesInThread()
     {
         std::thread(&Server::readMessages, this, serverSocketWrapp.getClientsCount() - 1).detach();
+    }
+    
+    void Server::deleteClient(int fd) 
+    {
+        int d = serverSocketWrapp.deleteClient(fd);
+        if (d > 0)
+        {
+            useCallClientChangeCallback(-d);
+        }        
     }
 
     void Server::listenClientsInThread()
@@ -100,6 +121,7 @@ namespace communication
         {
             serverSocketWrapp.serverListen();
             serverSocketWrapp.serverAccept();
+            useCallClientChangeCallback(serverSocketWrapp.getClientsCount());
             readMessagesInThread();
         }
     }
