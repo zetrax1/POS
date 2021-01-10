@@ -60,7 +60,7 @@ namespace communication
         }
     }
     
-void Client::readMessagesInLoop() 
+    void Client::readMessagesInLoop()
     {
         while(isConectionActive())
         {
