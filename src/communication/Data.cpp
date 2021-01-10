@@ -1,7 +1,8 @@
 #include "Data.hpp"
 
-Data::Data(int index, Smer, typeMessage typ) : m_indexClient(index),
-                                               m_typ(typ)
+Data::Data(int x, int y, int index, Smer, typeMessage typ) : suradnice(x, y),
+                                                             m_indexClient(index),
+                                                             m_typ(typ)
 {
 }
 

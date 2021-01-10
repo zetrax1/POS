@@ -9,6 +9,7 @@ namespace controler
     {
         if(clientCount > 0)
         {
+            server.sendMsg( clientCount - 1 ,Data(clientCount - 1));
             server.sendMsg(Data(clientCount*5, 50, clientCount - 1));
         }
         

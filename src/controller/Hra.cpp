@@ -160,9 +160,12 @@ namespace controler
       }
     }
 
-    if (change == true)
+    if (change == true && initialized )
     {
-      client.sendMsg(Data(m_indexClient, Smer(upFlag, downFlag, leftFlag, rightFlag)));
+      client.sendMsg(Data(m_postava[m_indexClient].getPozicia().first,
+                          m_postava[m_indexClient].getPozicia().first,
+                          m_indexClient,
+                          Smer(upFlag, downFlag, leftFlag, rightFlag)));
       change = false;
     }
   }
@@ -170,11 +173,13 @@ namespace controler
   bool Hra::messageReaction()
   {
     Data data = client.getFromReadQueue();
-
+    std::cout << "prisla sprava";
     switch (data.getType())
     {
     case typeMessage::pohyb:
+      std::cout << "prisla sprava pohyb";
       messagePohyb(data);
+      //std::cout << "prisla sprava pohyb";
       break;
     case typeMessage::newClient:
       messageNewClient(data);
@@ -182,7 +187,7 @@ namespace controler
 
     case typeMessage::initMessage:
       messageInit(data);
-
+      std::cout << "prisla sprava init";
       break;
 
     default:
@@ -194,18 +199,20 @@ namespace controler
   void Hra::messagePohyb(Data &data)
   {
     writeToVector(data.getSmer(),data.getIndex());
+    writeToVector(data.getSuradnice().first ,data.getSuradnice().second ,data.getIndex() );
   }
 
   void Hra::messageInit(Data &data)
   {
     m_indexClient = data.getIndex();
     std::unique_lock<std::mutex> mlock(mutex_);
-    for (int i = 0; i < m_indexClient - 1; i++)
+    for (int i = 0; i < m_indexClient+1 ; i++)
     {
      addNewPostava(model::Postava());
-
     }
     mutex_.unlock();
+    initialized = true;
+
   }
 
   void Hra::messageNewClient(Data &data)
@@ -221,7 +228,7 @@ namespace controler
     view::Monitor_view monitorView;
     sf::RenderWindow &window = monitorView.get();
     sizeWin = monitorView.getSize();
-    addNewPostava(model::Postava());
+   
 
     std::thread(&controler::Hra::moveItems, this).detach();
     std::future<bool> fut = std::async(&controler::Hra::messageReaction, this);

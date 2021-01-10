@@ -24,7 +24,7 @@ private:
 public:
 
 
-    Data(int index, Smer, typeMessage typ = pohyb);
+    Data(int x, int y,int index, Smer, typeMessage typ = pohyb);
 
     Data(int index, typeMessage typ = initMessage);
 

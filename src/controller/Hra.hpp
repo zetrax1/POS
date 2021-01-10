@@ -26,6 +26,7 @@ namespace controler
         std::mutex mutex_;
         bool m_isRun = true;
         std::pair<int, int> sizeWin;
+        bool initialized = false;
 
 
         void moveItems();
