@@ -6,7 +6,7 @@
 #include "../view/MonitorView.hpp"
 #include "../communication/Client.hpp"
 #include "../model/Smer_struct.hpp"
-
+#include <tuple>
 #include <vector>
 
 
@@ -30,9 +30,9 @@ namespace controler
 
 
         void moveItems();
-        Smer readSmerFromVector(int index);
+        std::tuple<bool, bool, bool,bool> readSmerFromVector(int index);
         void writeToVector(int x , int y,int index);
-        void writeToVector(Smer smer,int index);
+        void writeToVector(std::tuple<bool ,bool,bool,bool> smer,int index);
         void messagePohyb(Data &data);
         void messageInit(Data &data);
         void messageNewClient(Data &data);

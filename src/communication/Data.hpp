@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include "../model/Smer_struct.hpp"
+#include <tuple>
+
 
 enum typeMessage
 {
@@ -18,13 +20,14 @@ private:
 
     std::pair<int, int> suradnice;
     int m_indexClient ;
-    Smer m_smer;
+    std::tuple<bool ,bool,bool,bool> m_smer;
+
     typeMessage m_typ;
 
 public:
 
 
-    Data(int x, int y,int index, Smer, typeMessage typ = pohyb);
+    Data(int x, int y,int index, std::tuple<bool ,bool,bool,bool> smer, typeMessage typ = pohyb);
 
     Data(int index, typeMessage typ = initMessage);
 
@@ -36,7 +39,7 @@ public:
     int getIndex();
     typeMessage getType();
 
-    Smer getSmer();
+    std::tuple<bool ,bool,bool,bool> getSmer();
     std::pair<int, int> getSuradnice();
 
 
