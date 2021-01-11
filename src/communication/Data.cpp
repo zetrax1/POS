@@ -1,10 +1,14 @@
 #include "Data.hpp"
 
-Data::Data(int x, int y, int index, Smer, typeMessage typ) : suradnice(x, y),
+Data::Data(int x, int y, int index, std::tuple<bool ,bool,bool,bool> smer, typeMessage typ) : suradnice(x, y),
                                                              m_indexClient(index),
+                                                             m_smer(smer),
                                                              m_typ(typ)
 {
 }
+
+
+
 
 Data::Data(int index, typeMessage typ) : m_indexClient(index),
                                          m_typ(typ)
@@ -41,7 +45,7 @@ typeMessage Data::getType()
     return m_typ;
 }
 
-Smer Data::getSmer() 
+std::tuple<bool ,bool,bool,bool> Data::getSmer() 
 {
     return m_smer;
 }
@@ -50,3 +54,4 @@ std::pair<int, int> Data::getSuradnice()
 {
     return suradnice;
 }
+

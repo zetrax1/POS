@@ -23,15 +23,16 @@ namespace controler
       {
         auto x = getPostava(i).getPozicia().first;
         auto y = getPostava(i).getPozicia().second;
-        Smer smer = readSmerFromVector(i);
+        std::tuple<bool, bool, bool,bool> smer = readSmerFromVector(i);
 
-        if (smer.leftFlag)
+        //left, right ,up ,down
+        if (std::get<0>(smer))
           x -= SPRITE_SPEED;
-        if (smer.rightFlag)
+        if (std::get<1>(smer))
           x += SPRITE_SPEED;
-        if (smer.upFlag)
+        if (std::get<2>(smer))
           y -= SPRITE_SPEED;
-        if (smer.downFlag)
+        if (std::get<3>(smer))
           y += SPRITE_SPEED;
 
         // Check screen boundaries
@@ -47,11 +48,11 @@ namespace controler
         writeToVector(x, y, i);
       }
 
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
   }
 
-  Smer Hra::readSmerFromVector(int index)
+  std::tuple<bool, bool, bool,bool>  Hra::readSmerFromVector(int index)
   {
     return m_postava[index].getSmer();
   }
@@ -65,9 +66,9 @@ namespace controler
     mutex_.unlock();
   }
   
-  void Hra::writeToVector(Smer smer,int index) 
+  void Hra::writeToVector(std::tuple<bool, bool, bool,bool> smer,int index) 
   {
-    std::cout << smer.downFlag << smer.leftFlag << smer.rightFlag << smer.upFlag << "\n";
+    std::cout << "prisla mi od servera" << std::get<0>(smer)<< std::get<1>(smer) << std::get<2>(smer) << std::get<3>(smer) << "\n";
     std::unique_lock<std::mutex> mlock(mutex_);
 
     m_postava[index].setSmer(smer);
@@ -84,6 +85,7 @@ namespace controler
   {
 
     m_postava.push_back(postava);
+    m_postava.back().setSprite();
   }
 
   model::Postava &Hra::getPostava(int i_postava)
@@ -164,9 +166,10 @@ namespace controler
     if (change == true && initialized )
     {
       client.sendMsg(Data(m_postava[m_indexClient].getPozicia().first,
-                          m_postava[m_indexClient].getPozicia().first,
+                          m_postava[m_indexClient].getPozicia().second,
                           m_indexClient,
-                          Smer(upFlag, downFlag, leftFlag, rightFlag)));
+                          std::make_tuple(leftFlag, rightFlag, upFlag, downFlag)));
+
       change = false;
     }
   }
@@ -176,13 +179,10 @@ namespace controler
     while(m_isRun)
     {
     Data data = client.getFromReadQueue();
-   // std::cout << "prisla sprava \n";
     switch (data.getType())
     {
     case typeMessage::pohyb:
-      std::cout << "prisla sprava pohyb \n";
       messagePohyb(data);
-      //std::cout << "prisla sprava pohyb";
       break;
     case typeMessage::newClient:
       messageNewClient(data);
@@ -190,7 +190,6 @@ namespace controler
 
     case typeMessage::initMessage:
       messageInit(data);
-      std::cout << "prisla sprava init \n";
       break;
 
     default:
@@ -209,10 +208,12 @@ namespace controler
   void Hra::messageInit(Data &data)
   {
     m_indexClient = data.getIndex();
+    std::cout << m_indexClient << "  index clienta pri init \n";
+
     std::unique_lock<std::mutex> mlock(mutex_);
     for (int i = 0; i < m_indexClient+1 ; i++)
     {
-     addNewPostava(model::Postava());
+     addNewPostava(model::Postava(100 ,100 ));
     }
     mutex_.unlock();
     initialized = true;
@@ -240,10 +241,14 @@ namespace controler
     while (window.isOpen())
     {
       ovladanie_hry(std::ref(monitorView.get()));
+      window.clear();
 
+      if(initialized)
+      {
       for (model::Postava n : m_postava)
       {
         window.draw(n.getSprite());
+      }
       }
 
       window.display();

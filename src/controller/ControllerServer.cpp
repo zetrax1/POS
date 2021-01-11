@@ -43,6 +43,8 @@ namespace controler
                 case typeMessage::pohyb:
                 {
                     std::cout << "dostal spravu pohyb server \n";
+                     std::cout << "dostal som klienovi" << std::get<0>(m_data.first.getSmer()) << 
+                     std::get<1>(m_data.first.getSmer())<< std::get<2>(m_data.first.getSmer()) << std::get<3>(m_data.first.getSmer())<< "\n";
                     server.sendMsg(m_data.first);
                 }
                 break;

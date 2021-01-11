@@ -19,7 +19,7 @@ private:
     std::pair<int,int> m_pozicia;
     sf::Sprite m_sprite;
     sf::Texture m_texture;
-    Smer m_smer;
+    std::tuple<bool ,bool,bool,bool> m_smer;
 
 public:
     Postava();
@@ -36,8 +36,8 @@ public:
     sf::Sprite getSprite();
 
     void setSmer(bool up, bool down, bool left, bool right);
-    void setSmer(Smer sm);
-    Smer getSmer();
+    void setSmer(std::tuple<bool ,bool,bool,bool>  sm);
+    std::tuple<bool ,bool,bool,bool>  getSmer();
     
 };
 
