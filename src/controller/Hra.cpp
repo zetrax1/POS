@@ -97,11 +97,8 @@ namespace controler
   {
     // Process events
     sf::Event event;
-    bool upFlag = false;
-    bool downFlag = false;
-    bool leftFlag = false;
-    bool rightFlag = false;
-    bool change = false;
+
+    
 
     while (window.pollEvent(event))
     {

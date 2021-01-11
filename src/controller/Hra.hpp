@@ -27,6 +27,11 @@ namespace controler
         bool m_isRun = true;
         std::pair<int, int> sizeWin;
         bool initialized = false;
+        bool upFlag = false;
+        bool downFlag = false;
+        bool leftFlag = false;
+        bool rightFlag = false;
+        bool change = false;
 
 
         void moveItems();
